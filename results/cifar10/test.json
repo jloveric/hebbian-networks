@@ -1,0 +1,51 @@
+{
+  "seed": 10101,
+  "epoch": 100,
+  "metrics": {
+    "images": 10000,
+    "accuracy": 0.805,
+    "errors": 1950,
+    "per_class_accuracy": [
+      0.827,
+      0.896,
+      0.713,
+      0.65,
+      0.77,
+      0.736,
+      0.853,
+      0.861,
+      0.875,
+      0.869
+    ],
+    "layer_accuracy": [
+      0.1131,
+      0.3739,
+      0.7409
+    ],
+    "mean_margin": 0.03578175604343414,
+    "predicted_counts": [
+      999,
+      1012,
+      922,
+      973,
+      1008,
+      980,
+      1065,
+      1009,
+      1017,
+      1015
+    ],
+    "all_zero_fraction": 0.0,
+    "utilization": [
+      0.9953125,
+      0.97578125,
+      0.65
+    ]
+  },
+  "seconds": 9.141737565980293,
+  "checkpoint_sha256": "9875e2a2bbe51d0e671e9b08c19ed0b877d3ddd37bae5c6f723324c74d44cc8f",
+  "state_sha256": "c25cf5ff38c6b110141a6192b2dabd022579d226d460ca707e8ffc79ac4742f7",
+  "evaluation_preserved_state": true,
+  "test_used_for_selection": false,
+  "prior_validation_and_test_reuse": true
+}

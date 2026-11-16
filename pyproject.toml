@@ -1,0 +1,30 @@
+[project]
+name = "hebbian-networks"
+version = "0.1.0"
+description = "Class-Guided Hebbian Networks: paper implementations for MNIST and CIFAR-10"
+readme = "README.md"
+requires-python = ">=3.14,<3.15"
+dependencies = ["numpy==2.5.3"]
+
+[project.optional-dependencies]
+gpu = ["mojo==1.2.0", "max==26.7.0"]
+
+[dependency-groups]
+dev = ["pytest>=8"]
+
+[project.scripts]
+hebbian-train = "hebbian_networks.train:main"
+hebbian-evaluate = "hebbian_networks.evaluate:main"
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["hebbian_networks"]
+
+[tool.hatch.build.targets.wheel.force-include]
+"configs" = "hebbian_networks/configs"
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]

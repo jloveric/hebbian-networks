@@ -1,0 +1,660 @@
+{
+  "seed": 10101,
+  "epoch": 100,
+  "status": "complete",
+  "provenance": {
+    "version": "connected-full-1",
+    "seed": 10101,
+    "config": {
+      "channels": [
+        128,
+        128,
+        128
+      ],
+      "winners": [
+        8,
+        8,
+        8
+      ],
+      "kernels": [
+        3,
+        3,
+        5
+      ],
+      "pool_after": [
+        true,
+        true,
+        false
+      ],
+      "columns": 10,
+      "batch": 32,
+      "rate": 0.00075,
+      "margin": 0.05,
+      "dropout_probability": 0.2,
+      "direction_history": 0.125,
+      "history_decay": 0.99,
+      "observation_balance": "image"
+    },
+    "selection": {
+      "candidates": [
+        {
+          "seed": 10101,
+          "validation": {
+            "images": 10000,
+            "accuracy": 0.7983,
+            "errors": 2017,
+            "per_class_accuracy": [
+              0.805,
+              0.894,
+              0.729,
+              0.668,
+              0.756,
+              0.712,
+              0.837,
+              0.843,
+              0.868,
+              0.871
+            ],
+            "layer_accuracy": [
+              0.1245,
+              0.3147,
+              0.7434
+            ],
+            "mean_margin": 0.034169066697359085,
+            "predicted_counts": [
+              975,
+              995,
+              927,
+              1058,
+              967,
+              1004,
+              1018,
+              1005,
+              1016,
+              1035
+            ],
+            "all_zero_fraction": 0.0,
+            "utilization": [
+              0.99609375,
+              0.98046875,
+              0.68984375
+            ]
+          },
+          "initial_state_sha256": "ae2ec503052d67a0201d070539506568aa9ad1d3f2f715b5533f9f46eed32aca",
+          "checkpoint": "runs/hebbian-conv-cifar10-connected-timestep075/seed10101/final.npz",
+          "checkpoint_sha256": "3ac8728dfccb44003cbf8346710d11c20f5ce4ff6d4be1bcc3fd0f70606a442d",
+          "state_sha256": "02198f70bca97e22facaccabf1d19baa14006dd8b5254f471ac01a07d8b20d46"
+        },
+        {
+          "seed": 10102,
+          "validation": {
+            "images": 10000,
+            "accuracy": 0.7936,
+            "errors": 2064,
+            "per_class_accuracy": [
+              0.794,
+              0.889,
+              0.725,
+              0.661,
+              0.754,
+              0.706,
+              0.845,
+              0.832,
+              0.862,
+              0.868
+            ],
+            "layer_accuracy": [
+              0.1211,
+              0.3189,
+              0.7349
+            ],
+            "mean_margin": 0.03435060754418373,
+            "predicted_counts": [
+              945,
+              998,
+              945,
+              1060,
+              984,
+              1016,
+              1030,
+              983,
+              1007,
+              1032
+            ],
+            "all_zero_fraction": 0.0,
+            "utilization": [
+              0.99765625,
+              0.97734375,
+              0.6921875
+            ]
+          },
+          "initial_state_sha256": "5ac5698fc17d68446d0dfdfa129c2eae8ea77618b16613598a74bffd5221d176",
+          "checkpoint": "runs/hebbian-conv-cifar10-connected-timestep075/seed10102/final.npz",
+          "checkpoint_sha256": "1cb5be055f351942c9d6b68a553e736978a36dc15813b4c478d13a82cfbba334",
+          "state_sha256": "8d1d65e6d385c77ea8fb1bfeef486b16ceccb88e85cbc5201fc696a0068445be"
+        }
+      ],
+      "selected": {
+        "seed": 10101,
+        "validation": {
+          "images": 10000,
+          "accuracy": 0.7983,
+          "errors": 2017,
+          "per_class_accuracy": [
+            0.805,
+            0.894,
+            0.729,
+            0.668,
+            0.756,
+            0.712,
+            0.837,
+            0.843,
+            0.868,
+            0.871
+          ],
+          "layer_accuracy": [
+            0.1245,
+            0.3147,
+            0.7434
+          ],
+          "mean_margin": 0.034169066697359085,
+          "predicted_counts": [
+            975,
+            995,
+            927,
+            1058,
+            967,
+            1004,
+            1018,
+            1005,
+            1016,
+            1035
+          ],
+          "all_zero_fraction": 0.0,
+          "utilization": [
+            0.99609375,
+            0.98046875,
+            0.68984375
+          ]
+        },
+        "initial_state_sha256": "ae2ec503052d67a0201d070539506568aa9ad1d3f2f715b5533f9f46eed32aca",
+        "checkpoint": "runs/hebbian-conv-cifar10-connected-timestep075/seed10101/final.npz",
+        "checkpoint_sha256": "3ac8728dfccb44003cbf8346710d11c20f5ce4ff6d4be1bcc3fd0f70606a442d",
+        "state_sha256": "02198f70bca97e22facaccabf1d19baa14006dd8b5254f471ac01a07d8b20d46"
+      },
+      "rule": "lowest epoch100 validation error count; ties choose lower seed",
+      "official_test_used_for_selection": false
+    },
+    "training_images": 50000,
+    "validation_images": 0,
+    "data_identity": "e6714d4bede633bad52b3f61f724c31ff2390df029ca8860afd8144e47ebb0cb",
+    "mean": [
+      0.4913996756076813,
+      0.4821584224700928,
+      0.44653093814849854
+    ],
+    "backend": {
+      "compiler": "Mojo 1.2.0 (2016d0cd)",
+      "sources": {
+        "accelerators/mojo/competitive_conv_columns_antialias_ops.mojo": "b677d638fd5045252c30a23a5914ae43db7c5e545bfcd27152c6eda5de6fd1f7",
+        "accelerators/mojo/competitive_conv_columns_batch_lion_history_ops.mojo": "c68141bb8d2e0e2e51166e8a8bb083a2aed1feda8fc67daa7f7b24c8f9a80898",
+        "accelerators/mojo/competitive_conv_columns_batch_lion_image_ops.mojo": "7c8b05e92dbd77c0e5544d1fdf75ddfe87d4e38d6b89f619f8008a4f15e8e161",
+        "accelerators/mojo/competitive_conv_columns_batch_lion_ops.mojo": "1ea11b7db5450f01cbe2c1f28bc7637b3d3c7e713aee4adae1804d135621e6b8",
+        "accelerators/mojo/competitive_conv_columns_bias_ops.mojo": "9b3475824b405c92771d3b16afb59ee8081b7b6f6811ee711b8f462fc0837670",
+        "accelerators/mojo/competitive_conv_columns_margin_ops.mojo": "327fa19597da4c51c3c015f6461143b8843031475e5a2bbece1af1dfb27f2f66",
+        "accelerators/mojo/competitive_conv_columns_ops.mojo": "86fdc2407c768c9a76e20438dcdb2dd7c1ea537dd3f0282044a91ba94b1289f5",
+        "accelerators/mojo/competitive_conv_columns_performance_ops.mojo": "ae9550160c48efa7a1c9b2733905e6913e092c7cf39ccb980b43e5f1b4b514c1",
+        "accelerators/mojo/competitive_conv_columns_warp_selection.mojo": "f9158909de87cc9c02c1e737126d3ae6848aefca0c23b77063917a7b72b300c7",
+        "accelerators/mojo/competitive_conv_connected_groups.mojo": "4dfaab45246a8516ac2c04b76d51291426240164d25cdae612182ea89ed83e80",
+        "accelerators/mojo/competitive_conv_connected_sparse.mojo": "f624f8d0fbc753f22049f85e4d28b63797feb5b76361b7f5b7715db6e10c335c",
+        "accelerators/mojo/competitive_conv_connected_sparse_ops.mojo": "373d5dc2d09d086b282c0fb240eb33aefb4d213dc522ac100e41014aca9b1704",
+        "accelerators/mojo/competitive_gru.mojo": "57447c37a97a00050229d629e636b351a3c920c5b31cf4a6025eafe1d4572fdd",
+        "experiments/competitive_conv_columns.py": "1fe47a4ca57ec7af3d08ea059ba64460fd0511074c66ca0954026c9c02ae43a7",
+        "experiments/competitive_conv_columns_antialias.py": "d8128ff5a302b821a21abc28b98ecdd76776170604fbe0d02c8e84459c3a633f",
+        "experiments/competitive_conv_columns_batch_lion_image.py": "7c1027fbfb5f61abfc0a5a9e4e4f25402de5082911a4cd8260f0db02d9af854b",
+        "experiments/competitive_conv_connected_groups.py": "7fddd226adcafcff3795fa8d9d2b4a7a484b49a222083e27f6484d2173c23661",
+        "experiments/competitive_conv_connected_sparse.py": "d86a76f05be407f2eaa4f959094610c985ca8ad2b4b729245d2298c51bc19de2"
+      },
+      "binary": "runs/hebbian-conv-cifar10-connected-performance/bin/14e89b95605a80f5d7c8/competitive_conv_connected_sparse_native.so",
+      "binary_sha256": "0ec3801e9e553a709971da131bea20aa0a9f778ec0f2f78fcee3b3d6ab2fd9e0"
+    },
+    "schedule": "constant20_cosine80",
+    "fresh_initialization": true,
+    "sources": {
+      "experiments/run_cifar_connected_full.py": "ca6f4a0af71efd6cfc90c7187c39ca75c596a072b48f7fc249837ec842af8aab",
+      "experiments/run_cifar_columns_full_data.py": "1ed202923bff5ac1ef4787bee1793968ec5c1f455068e8565d775d9501f51079",
+      "experiments/run_cifar_connected_groups.py": "8cb8614cdf7906e37021e1984c53177a5d0172fa190a294b5dc01c9a9c80892b",
+      "experiments/run_cifar_connected_timestep075.py": "65fcfc3e98a8e305259ef83a108e3076e85c5d87a9a7eeed08ae48712b80d1f0"
+    },
+    "augmentation": false,
+    "official_test_for_selection": false
+  },
+  "fresh_weights": true,
+  "initial_state_sha256": "ae2ec503052d67a0201d070539506568aa9ad1d3f2f715b5533f9f46eed32aca",
+  "measurements": [
+    {
+      "epoch": 0,
+      "rate": null,
+      "training": {
+        "images": 4000,
+        "accuracy": 0.10375,
+        "errors": 3585,
+        "per_class_accuracy": [
+          0.9875,
+          0.0025,
+          0.0,
+          0.0125,
+          0.035,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "layer_accuracy": [
+          0.09875,
+          0.10925,
+          0.088
+        ],
+        "mean_margin": -0.059099674224853516,
+        "predicted_counts": [
+          3890,
+          17,
+          1,
+          37,
+          39,
+          0,
+          0,
+          4,
+          2,
+          10
+        ],
+        "all_zero_fraction": 0.0,
+        "utilization": [
+          1.0,
+          1.0,
+          1.0
+        ]
+      },
+      "training_epoch_seconds": 0.0
+    },
+    {
+      "epoch": 1,
+      "rate": 0.00075,
+      "training": {
+        "images": 4000,
+        "accuracy": 0.62225,
+        "errors": 1511,
+        "per_class_accuracy": [
+          0.695,
+          0.745,
+          0.5425,
+          0.435,
+          0.4075,
+          0.55,
+          0.7375,
+          0.6525,
+          0.7075,
+          0.75
+        ],
+        "layer_accuracy": [
+          0.13625,
+          0.341,
+          0.548
+        ],
+        "mean_margin": 0.01810581423342228,
+        "predicted_counts": [
+          441,
+          409,
+          465,
+          387,
+          266,
+          372,
+          468,
+          370,
+          383,
+          439
+        ],
+        "all_zero_fraction": 0.0,
+        "utilization": [
+          1.0,
+          1.0,
+          0.99609375
+        ]
+      },
+      "training_epoch_seconds": 30.59423596301349
+    },
+    {
+      "epoch": 5,
+      "rate": 0.00075,
+      "training": {
+        "images": 4000,
+        "accuracy": 0.78725,
+        "errors": 851,
+        "per_class_accuracy": [
+          0.8125,
+          0.89,
+          0.68,
+          0.585,
+          0.79,
+          0.7325,
+          0.8925,
+          0.7625,
+          0.8625,
+          0.865
+        ],
+        "layer_accuracy": [
+          0.15925,
+          0.2965,
+          0.7095
+        ],
+        "mean_margin": 0.038701411336660385,
+        "predicted_counts": [
+          409,
+          414,
+          361,
+          307,
+          474,
+          382,
+          451,
+          369,
+          427,
+          406
+        ],
+        "all_zero_fraction": 0.0,
+        "utilization": [
+          1.0,
+          0.99375,
+          0.67109375
+        ]
+      },
+      "training_epoch_seconds": 28.654453415016178
+    },
+    {
+      "epoch": 10,
+      "rate": 0.00075,
+      "training": {
+        "images": 4000,
+        "accuracy": 0.80525,
+        "errors": 779,
+        "per_class_accuracy": [
+          0.8275,
+          0.865,
+          0.7425,
+          0.575,
+          0.7875,
+          0.73,
+          0.8825,
+          0.8175,
+          0.9025,
+          0.9225
+        ],
+        "layer_accuracy": [
+          0.182,
+          0.3045,
+          0.7545
+        ],
+        "mean_margin": 0.03703781217336655,
+        "predicted_counts": [
+          389,
+          366,
+          373,
+          318,
+          448,
+          382,
+          472,
+          383,
+          419,
+          450
+        ],
+        "all_zero_fraction": 0.0,
+        "utilization": [
+          1.0,
+          0.9796875,
+          0.62734375
+        ]
+      },
+      "training_epoch_seconds": 28.6819860439864
+    },
+    {
+      "epoch": 20,
+      "rate": 0.00075,
+      "training": {
+        "images": 4000,
+        "accuracy": 0.816,
+        "errors": 736,
+        "per_class_accuracy": [
+          0.835,
+          0.925,
+          0.735,
+          0.7225,
+          0.765,
+          0.7175,
+          0.8575,
+          0.805,
+          0.88,
+          0.9175
+        ],
+        "layer_accuracy": [
+          0.116,
+          0.326,
+          0.76925
+        ],
+        "mean_margin": 0.03889527544379234,
+        "predicted_counts": [
+          381,
+          423,
+          380,
+          417,
+          411,
+          368,
+          436,
+          362,
+          397,
+          425
+        ],
+        "all_zero_fraction": 0.0,
+        "utilization": [
+          0.99921875,
+          0.98203125,
+          0.621875
+        ]
+      },
+      "training_epoch_seconds": 28.57329148997087
+    },
+    {
+      "epoch": 40,
+      "rate": 0.0006503709410383821,
+      "training": {
+        "images": 4000,
+        "accuracy": 0.83425,
+        "errors": 663,
+        "per_class_accuracy": [
+          0.865,
+          0.94,
+          0.76,
+          0.7,
+          0.755,
+          0.77,
+          0.885,
+          0.9,
+          0.88,
+          0.8875
+        ],
+        "layer_accuracy": [
+          0.1415,
+          0.34725,
+          0.77025
+        ],
+        "mean_margin": 0.03993775323033333,
+        "predicted_counts": [
+          403,
+          433,
+          377,
+          385,
+          371,
+          389,
+          429,
+          428,
+          392,
+          393
+        ],
+        "all_zero_fraction": 0.0,
+        "utilization": [
+          0.98203125,
+          0.9796875,
+          0.60703125
+        ]
+      },
+      "training_epoch_seconds": 28.543988057994284
+    },
+    {
+      "epoch": 60,
+      "rate": 0.00038972243090965074,
+      "training": {
+        "images": 4000,
+        "accuracy": 0.895,
+        "errors": 420,
+        "per_class_accuracy": [
+          0.93,
+          0.9675,
+          0.8575,
+          0.7875,
+          0.8575,
+          0.8275,
+          0.915,
+          0.93,
+          0.9425,
+          0.935
+        ],
+        "layer_accuracy": [
+          0.13075,
+          0.30375,
+          0.85225
+        ],
+        "mean_margin": 0.046631231904029846,
+        "predicted_counts": [
+          408,
+          403,
+          406,
+          371,
+          389,
+          379,
+          414,
+          430,
+          406,
+          394
+        ],
+        "all_zero_fraction": 0.0,
+        "utilization": [
+          0.96484375,
+          0.97421875,
+          0.6140625
+        ]
+      },
+      "training_epoch_seconds": 28.129164108016994
+    },
+    {
+      "epoch": 80,
+      "rate": 0.00012044972042514692,
+      "training": {
+        "images": 4000,
+        "accuracy": 0.972,
+        "errors": 112,
+        "per_class_accuracy": [
+          0.9825,
+          0.99,
+          0.955,
+          0.9175,
+          0.9675,
+          0.9675,
+          0.975,
+          0.975,
+          0.9925,
+          0.9975
+        ],
+        "layer_accuracy": [
+          0.11975,
+          0.3425,
+          0.94675
+        ],
+        "mean_margin": 0.059498172253370285,
+        "predicted_counts": [
+          408,
+          396,
+          394,
+          377,
+          407,
+          411,
+          403,
+          395,
+          408,
+          401
+        ],
+        "all_zero_fraction": 0.0,
+        "utilization": [
+          0.9921875,
+          0.9734375,
+          0.62109375
+        ]
+      },
+      "training_epoch_seconds": 26.888601391983684
+    },
+    {
+      "epoch": 100,
+      "rate": 2.8911140972891214e-07,
+      "training": {
+        "images": 50000,
+        "accuracy": 0.98778,
+        "errors": 611,
+        "per_class_accuracy": [
+          0.9972,
+          0.9984,
+          0.9772,
+          0.97,
+          0.986,
+          0.9716,
+          0.9898,
+          0.9936,
+          0.998,
+          0.996
+        ],
+        "layer_accuracy": [
+          0.11514,
+          0.39042,
+          0.96478
+        ],
+        "mean_margin": 0.06290759146213531,
+        "predicted_counts": [
+          5057,
+          4998,
+          4950,
+          4967,
+          5066,
+          4947,
+          5005,
+          4999,
+          5022,
+          4989
+        ],
+        "all_zero_fraction": 0.0,
+        "utilization": [
+          0.996875,
+          0.97734375,
+          0.70390625
+        ]
+      },
+      "training_epoch_seconds": 25.728887845994905
+    }
+  ],
+  "training_seconds": 2788.445128385618,
+  "evaluation_seconds": 57.417941406951286,
+  "checkpoint_seconds": 289.5615948892082,
+  "included_images": 2787616,
+  "positive_pairs": 2787616,
+  "negative_pairs": 2787616,
+  "all_zero_checks": 0,
+  "next_rate": 0.0,
+  "last_epoch_seconds": 25.728887845994905,
+  "last_rate": 2.8911140972891214e-07
+}

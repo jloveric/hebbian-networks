@@ -1,0 +1,150 @@
+{
+  "candidates": [
+    {
+      "seed": 10101,
+      "validation": {
+        "images": 10000,
+        "accuracy": 0.7983,
+        "errors": 2017,
+        "per_class_accuracy": [
+          0.805,
+          0.894,
+          0.729,
+          0.668,
+          0.756,
+          0.712,
+          0.837,
+          0.843,
+          0.868,
+          0.871
+        ],
+        "layer_accuracy": [
+          0.1245,
+          0.3147,
+          0.7434
+        ],
+        "mean_margin": 0.034169066697359085,
+        "predicted_counts": [
+          975,
+          995,
+          927,
+          1058,
+          967,
+          1004,
+          1018,
+          1005,
+          1016,
+          1035
+        ],
+        "all_zero_fraction": 0.0,
+        "utilization": [
+          0.99609375,
+          0.98046875,
+          0.68984375
+        ]
+      },
+      "initial_state_sha256": "ae2ec503052d67a0201d070539506568aa9ad1d3f2f715b5533f9f46eed32aca",
+      "checkpoint": "runs/hebbian-conv-cifar10-connected-timestep075/seed10101/final.npz",
+      "checkpoint_sha256": "3ac8728dfccb44003cbf8346710d11c20f5ce4ff6d4be1bcc3fd0f70606a442d",
+      "state_sha256": "02198f70bca97e22facaccabf1d19baa14006dd8b5254f471ac01a07d8b20d46"
+    },
+    {
+      "seed": 10102,
+      "validation": {
+        "images": 10000,
+        "accuracy": 0.7936,
+        "errors": 2064,
+        "per_class_accuracy": [
+          0.794,
+          0.889,
+          0.725,
+          0.661,
+          0.754,
+          0.706,
+          0.845,
+          0.832,
+          0.862,
+          0.868
+        ],
+        "layer_accuracy": [
+          0.1211,
+          0.3189,
+          0.7349
+        ],
+        "mean_margin": 0.03435060754418373,
+        "predicted_counts": [
+          945,
+          998,
+          945,
+          1060,
+          984,
+          1016,
+          1030,
+          983,
+          1007,
+          1032
+        ],
+        "all_zero_fraction": 0.0,
+        "utilization": [
+          0.99765625,
+          0.97734375,
+          0.6921875
+        ]
+      },
+      "initial_state_sha256": "5ac5698fc17d68446d0dfdfa129c2eae8ea77618b16613598a74bffd5221d176",
+      "checkpoint": "runs/hebbian-conv-cifar10-connected-timestep075/seed10102/final.npz",
+      "checkpoint_sha256": "1cb5be055f351942c9d6b68a553e736978a36dc15813b4c478d13a82cfbba334",
+      "state_sha256": "8d1d65e6d385c77ea8fb1bfeef486b16ceccb88e85cbc5201fc696a0068445be"
+    }
+  ],
+  "selected": {
+    "seed": 10101,
+    "validation": {
+      "images": 10000,
+      "accuracy": 0.7983,
+      "errors": 2017,
+      "per_class_accuracy": [
+        0.805,
+        0.894,
+        0.729,
+        0.668,
+        0.756,
+        0.712,
+        0.837,
+        0.843,
+        0.868,
+        0.871
+      ],
+      "layer_accuracy": [
+        0.1245,
+        0.3147,
+        0.7434
+      ],
+      "mean_margin": 0.034169066697359085,
+      "predicted_counts": [
+        975,
+        995,
+        927,
+        1058,
+        967,
+        1004,
+        1018,
+        1005,
+        1016,
+        1035
+      ],
+      "all_zero_fraction": 0.0,
+      "utilization": [
+        0.99609375,
+        0.98046875,
+        0.68984375
+      ]
+    },
+    "initial_state_sha256": "ae2ec503052d67a0201d070539506568aa9ad1d3f2f715b5533f9f46eed32aca",
+    "checkpoint": "runs/hebbian-conv-cifar10-connected-timestep075/seed10101/final.npz",
+    "checkpoint_sha256": "3ac8728dfccb44003cbf8346710d11c20f5ce4ff6d4be1bcc3fd0f70606a442d",
+    "state_sha256": "02198f70bca97e22facaccabf1d19baa14006dd8b5254f471ac01a07d8b20d46"
+  },
+  "rule": "lowest epoch100 validation error count; ties choose lower seed",
+  "official_test_used_for_selection": false
+}

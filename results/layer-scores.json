@@ -1,0 +1,201 @@
+{
+  "results": [
+    {
+      "individual": [
+        {
+          "layers": [
+            1
+          ],
+          "images": 10000,
+          "errors": 5602,
+          "accuracy": 0.43979999999999997
+        },
+        {
+          "layers": [
+            2
+          ],
+          "images": 10000,
+          "errors": 457,
+          "accuracy": 0.9543
+        },
+        {
+          "layers": [
+            3
+          ],
+          "images": 10000,
+          "errors": 210,
+          "accuracy": 0.979
+        }
+      ],
+      "prefix": [
+        {
+          "layers": [
+            1
+          ],
+          "images": 10000,
+          "errors": 5602,
+          "accuracy": 0.43979999999999997
+        },
+        {
+          "layers": [
+            1,
+            2
+          ],
+          "images": 10000,
+          "errors": 451,
+          "accuracy": 0.9549
+        },
+        {
+          "layers": [
+            1,
+            2,
+            3
+          ],
+          "images": 10000,
+          "errors": 166,
+          "accuracy": 0.9834
+        }
+      ],
+      "dataset": "MNIST",
+      "checkpoint": "runs/hebbian-mnist-connected-drop30-full/full/seed10102/final.npz",
+      "checkpoint_sha256": "1e2be23506cefd8a4fa63f0472375c8a7af93f962396f1c2763f9a1174224f7b",
+      "state_sha256": "90a36a6be8061d1a54d982b853def89bf5e5a5a5a4d43b940dda52599af82fb3",
+      "config": {
+        "widths": [
+          256,
+          256,
+          256
+        ],
+        "winners": [
+          128,
+          128,
+          128
+        ],
+        "batch": 32,
+        "margin": 0.1,
+        "dropout": 0.3,
+        "direction_mix": [
+          0.125,
+          0.875
+        ]
+      },
+      "seed": 10102,
+      "epoch": 100,
+      "test_sources": {
+        "t10k-images-idx3-ubyte.gz": "8d422c7b0a1c1c79245a5bcf07fe86e33eeafee792b84584aec276f5a2dbc4e6",
+        "t10k-labels-idx1-ubyte.gz": "f7ae60f92e00ec6debd23a6088c31dbd2371eca3ffa0defaefb259924204aec6"
+      },
+      "forward_seconds": 1.1573623819858767,
+      "evaluation_preserved_state": true,
+      "published_result_reproduced": true,
+      "dropout_enabled": false,
+      "training_performed": false
+    },
+    {
+      "individual": [
+        {
+          "layers": [
+            1
+          ],
+          "images": 10000,
+          "errors": 8869,
+          "accuracy": 0.11309999999999998
+        },
+        {
+          "layers": [
+            2
+          ],
+          "images": 10000,
+          "errors": 6261,
+          "accuracy": 0.3739
+        },
+        {
+          "layers": [
+            3
+          ],
+          "images": 10000,
+          "errors": 2591,
+          "accuracy": 0.7409
+        }
+      ],
+      "prefix": [
+        {
+          "layers": [
+            1
+          ],
+          "images": 10000,
+          "errors": 8869,
+          "accuracy": 0.11309999999999998
+        },
+        {
+          "layers": [
+            1,
+            2
+          ],
+          "images": 10000,
+          "errors": 6139,
+          "accuracy": 0.3861
+        },
+        {
+          "layers": [
+            1,
+            2,
+            3
+          ],
+          "images": 10000,
+          "errors": 1950,
+          "accuracy": 0.8049999999999999
+        }
+      ],
+      "dataset": "CIFAR-10",
+      "checkpoint": "runs/hebbian-conv-cifar10-connected-full/final.npz",
+      "checkpoint_sha256": "9875e2a2bbe51d0e671e9b08c19ed0b877d3ddd37bae5c6f723324c74d44cc8f",
+      "state_sha256": "c25cf5ff38c6b110141a6192b2dabd022579d226d460ca707e8ffc79ac4742f7",
+      "config": {
+        "channels": [
+          128,
+          128,
+          128
+        ],
+        "winners": [
+          8,
+          8,
+          8
+        ],
+        "kernels": [
+          3,
+          3,
+          5
+        ],
+        "pool_after": [
+          true,
+          true,
+          false
+        ],
+        "columns": 10,
+        "batch": 32,
+        "rate": 0.00075,
+        "margin": 0.05,
+        "dropout_probability": 0.2,
+        "direction_history": 0.125,
+        "history_decay": 0.99,
+        "observation_balance": "image"
+      },
+      "seed": 10101,
+      "epoch": 100,
+      "test_sources": {
+        "data/hebbian-conv/cifar10/cifar-10-binary.tar.gz": "c4a38c50a1bc5f3a1c5537f2155ab9d68f9f25eb1ed8d9ddda3db29a59bca1dd"
+      },
+      "forward_seconds": 4.083146602031775,
+      "evaluation_preserved_state": true,
+      "published_result_reproduced": true,
+      "dropout_enabled": false,
+      "training_performed": false
+    }
+  ],
+  "source_sha256": "679fcb543b9d6de6368b246d16190386324514c1253c2b816137cfe9db1e7503",
+  "paper_evidence_sha256": "aca76382309de1a382fb35be501733b2b08245340760f79759a46dc4adc29585",
+  "training_performed": false,
+  "inference_rule_fitted": false,
+  "official_test_reused": true
+}

@@ -1,0 +1,41 @@
+{
+  "config": {
+    "batch": 32,
+    "direction_mix": [
+      0.125,
+      0.875
+    ],
+    "dropout": 0.3,
+    "margin": 0.1,
+    "widths": [
+      256,
+      256,
+      256
+    ],
+    "winners": [
+      128,
+      128,
+      128
+    ]
+  },
+  "models": [
+    {
+      "path": "runs/hebbian-mnist-connected-dropout100-validation/drop30/seed10101/final.npz",
+      "seed": 10101,
+      "state_sha256": "ac46c50e65e3f884ce3cce0f93e19b45acde3f288350c91364d4c4182dac70bc"
+    },
+    {
+      "path": "runs/hebbian-mnist-connected-dropout100-validation/drop30/seed10102/final.npz",
+      "seed": 10102,
+      "state_sha256": "c211ccca1076d0b032ea883340b225e85af4b931f30ec6d3e5cb036d86dc25d8"
+    }
+  ],
+  "name": "30%-hidden-dropout",
+  "official_test_used_for_selection": false,
+  "schedule": "constant20_cosine80",
+  "selection_rule": "lowest summed paired epoch-100 validation errors; ties prefer less dropout",
+  "validation_errors": [
+    177,
+    176
+  ]
+}

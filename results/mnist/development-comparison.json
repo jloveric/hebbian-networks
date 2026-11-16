@@ -1,0 +1,681 @@
+{
+  "all_state_finite": true,
+  "comparison": [
+    {
+      "dropout": 0.1,
+      "mean_validation": 0.98145,
+      "training_errors": [
+        0,
+        0
+      ],
+      "validation_errors": [
+        186,
+        185
+      ]
+    },
+    {
+      "dropout": 0.2,
+      "mean_validation": 0.9816,
+      "training_errors": [
+        4,
+        4
+      ],
+      "validation_errors": [
+        180,
+        188
+      ]
+    },
+    {
+      "dropout": 0.3,
+      "mean_validation": 0.9823500000000001,
+      "training_errors": [
+        16,
+        20
+      ],
+      "validation_errors": [
+        177,
+        176
+      ]
+    }
+  ],
+  "complete": true,
+  "final_and_resume_equal": true,
+  "final_metrics_verified_by_runner_on_independent_checkpoint_reload": true,
+  "models": [
+    {
+      "dropout": 0.1,
+      "evaluation_preserved_state": true,
+      "path": "runs/hebbian-mnist-connected-final/development/seed10101/final.npz",
+      "seed": 10101,
+      "state_sha256": "b64ec8e8da765ee30f2736c74dcf079ede7ebccc69dc2ee7ba94fe0eff44c552",
+      "training": {
+        "accuracy": 1.0,
+        "all_zero_fraction": 0.0,
+        "errors": 0,
+        "images": 50000,
+        "layer_accuracy": [
+          0.45642,
+          0.94244,
+          0.99996
+        ],
+        "mean_margin": 0.21970093250274658,
+        "numerical_health": "finite",
+        "per_class_accuracy": [
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0
+        ],
+        "utilization": [
+          {
+            "fraction_ever_selected": 1.0,
+            "never_selected": 0,
+            "selection_count_max": 39074,
+            "selection_count_median": 24793.5,
+            "selection_count_min": 12705
+          },
+          {
+            "fraction_ever_selected": 1.0,
+            "never_selected": 0,
+            "selection_count_max": 36457,
+            "selection_count_median": 25069.0,
+            "selection_count_min": 107
+          },
+          {
+            "fraction_ever_selected": 1.0,
+            "never_selected": 0,
+            "selection_count_max": 34475,
+            "selection_count_median": 24917.0,
+            "selection_count_min": 11672
+          }
+        ]
+      },
+      "validation": {
+        "accuracy": 0.9814,
+        "all_zero_fraction": 0.0,
+        "errors": 186,
+        "images": 10000,
+        "layer_accuracy": [
+          0.4477,
+          0.9194,
+          0.9783
+        ],
+        "mean_margin": 0.2102314978837967,
+        "numerical_health": "finite",
+        "per_class_accuracy": [
+          0.9880834160873883,
+          0.9927007299270073,
+          0.9849699398797596,
+          0.9706744868035191,
+          0.9788306451612904,
+          0.9728813559322034,
+          0.9929435483870968,
+          0.9789674952198852,
+          0.9735503560528993,
+          0.9785276073619632
+        ],
+        "utilization": [
+          {
+            "fraction_ever_selected": 1.0,
+            "never_selected": 0,
+            "selection_count_max": 7820,
+            "selection_count_median": 4961.0,
+            "selection_count_min": 2489
+          },
+          {
+            "fraction_ever_selected": 1.0,
+            "never_selected": 0,
+            "selection_count_max": 7343,
+            "selection_count_median": 5006.0,
+            "selection_count_min": 18
+          },
+          {
+            "fraction_ever_selected": 1.0,
+            "never_selected": 0,
+            "selection_count_max": 6944,
+            "selection_count_median": 4978.5,
+            "selection_count_min": 2377
+          }
+        ]
+      }
+    },
+    {
+      "dropout": 0.1,
+      "evaluation_preserved_state": true,
+      "path": "runs/hebbian-mnist-connected-final/development/seed10102/final.npz",
+      "seed": 10102,
+      "state_sha256": "92b3383f7825ca39c453693e61b16952415f8fdb79d6709c95767df4ebc4d879",
+      "training": {
+        "accuracy": 1.0,
+        "all_zero_fraction": 0.0,
+        "errors": 0,
+        "images": 50000,
+        "layer_accuracy": [
+          0.50816,
+          0.9433,
+          0.99992
+        ],
+        "mean_margin": 0.2200968712568283,
+        "numerical_health": "finite",
+        "per_class_accuracy": [
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0
+        ],
+        "utilization": [
+          {
+            "fraction_ever_selected": 1.0,
+            "never_selected": 0,
+            "selection_count_max": 39117,
+            "selection_count_median": 24709.0,
+            "selection_count_min": 11846
+          },
+          {
+            "fraction_ever_selected": 1.0,
+            "never_selected": 0,
+            "selection_count_max": 35260,
+            "selection_count_median": 24929.0,
+            "selection_count_min": 882
+          },
+          {
+            "fraction_ever_selected": 1.0,
+            "never_selected": 0,
+            "selection_count_max": 33582,
+            "selection_count_median": 24932.5,
+            "selection_count_min": 9388
+          }
+        ]
+      },
+      "validation": {
+        "accuracy": 0.9815,
+        "all_zero_fraction": 0.0,
+        "errors": 185,
+        "images": 10000,
+        "layer_accuracy": [
+          0.4962,
+          0.9183,
+          0.9776
+        ],
+        "mean_margin": 0.2108684629201889,
+        "numerical_health": "finite",
+        "per_class_accuracy": [
+          0.9880834160873883,
+          0.9927007299270073,
+          0.9879759519038076,
+          0.9716520039100685,
+          0.9798387096774194,
+          0.9717514124293786,
+          0.9939516129032258,
+          0.9780114722753346,
+          0.970498474059003,
+          0.9785276073619632
+        ],
+        "utilization": [
+          {
+            "fraction_ever_selected": 1.0,
+            "never_selected": 0,
+            "selection_count_max": 7856,
+            "selection_count_median": 4937.0,
+            "selection_count_min": 2302
+          },
+          {
+            "fraction_ever_selected": 1.0,
+            "never_selected": 0,
+            "selection_count_max": 7061,
+            "selection_count_median": 4979.5,
+            "selection_count_min": 177
+          },
+          {
+            "fraction_ever_selected": 1.0,
+            "never_selected": 0,
+            "selection_count_max": 6809,
+            "selection_count_median": 4993.5,
+            "selection_count_min": 1868
+          }
+        ]
+      }
+    },
+    {
+      "dropout": 0.2,
+      "evaluation_preserved_state": true,
+      "path": "runs/hebbian-mnist-connected-dropout100-validation/drop20/seed10101/final.npz",
+      "seed": 10101,
+      "state_sha256": "b58a23c9d6bf0655a1b5c6ab0f48314c0660eb85cbafb125eef419c5adde5c3b",
+      "training": {
+        "accuracy": 0.99992,
+        "all_zero_fraction": 0.0,
+        "errors": 4,
+        "images": 50000,
+        "layer_accuracy": [
+          0.42256,
+          0.97916,
+          0.99958
+        ],
+        "mean_margin": 0.22266465425491333,
+        "numerical_health": "finite",
+        "per_class_accuracy": [
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          0.9995876288659794,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          0.9995976664654999
+        ],
+        "utilization": [
+          {
+            "fraction_ever_selected": 1.0,
+            "never_selected": 0,
+            "selection_count_max": 40918,
+            "selection_count_median": 24524.0,
+            "selection_count_min": 10820
+          },
+          {
+            "fraction_ever_selected": 1.0,
+            "never_selected": 0,
+            "selection_count_max": 35275,
+            "selection_count_median": 24925.0,
+            "selection_count_min": 16
+          },
+          {
+            "fraction_ever_selected": 1.0,
+            "never_selected": 0,
+            "selection_count_max": 33993,
+            "selection_count_median": 24882.5,
+            "selection_count_min": 17074
+          }
+        ]
+      },
+      "validation": {
+        "accuracy": 0.982,
+        "all_zero_fraction": 0.0,
+        "errors": 180,
+        "images": 10000,
+        "layer_accuracy": [
+          0.417,
+          0.9548,
+          0.9776
+        ],
+        "mean_margin": 0.21367479860782623,
+        "numerical_health": "finite",
+        "per_class_accuracy": [
+          0.9890764647467726,
+          0.9927007299270073,
+          0.9849699398797596,
+          0.9687194525904204,
+          0.9828629032258065,
+          0.9751412429378531,
+          0.9919354838709677,
+          0.9808795411089866,
+          0.9735503560528993,
+          0.9785276073619632
+        ],
+        "utilization": [
+          {
+            "fraction_ever_selected": 1.0,
+            "never_selected": 0,
+            "selection_count_max": 8144,
+            "selection_count_median": 4909.5,
+            "selection_count_min": 2150
+          },
+          {
+            "fraction_ever_selected": 1.0,
+            "never_selected": 0,
+            "selection_count_max": 7027,
+            "selection_count_median": 4976.0,
+            "selection_count_min": 3
+          },
+          {
+            "fraction_ever_selected": 1.0,
+            "never_selected": 0,
+            "selection_count_max": 6846,
+            "selection_count_median": 4976.5,
+            "selection_count_min": 3353
+          }
+        ]
+      }
+    },
+    {
+      "dropout": 0.2,
+      "evaluation_preserved_state": true,
+      "path": "runs/hebbian-mnist-connected-dropout100-validation/drop20/seed10102/final.npz",
+      "seed": 10102,
+      "state_sha256": "b524327b4b7f522fdee83039377cf1a27f6f72b300ee6ce3ed1d39e5f960f67c",
+      "training": {
+        "accuracy": 0.99992,
+        "all_zero_fraction": 0.0,
+        "errors": 4,
+        "images": 50000,
+        "layer_accuracy": [
+          0.4672,
+          0.97976,
+          0.99974
+        ],
+        "mean_margin": 0.22340363264083862,
+        "numerical_health": "finite",
+        "per_class_accuracy": [
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          0.9997938144329896,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          0.9993964996982498
+        ],
+        "utilization": [
+          {
+            "fraction_ever_selected": 1.0,
+            "never_selected": 0,
+            "selection_count_max": 40201,
+            "selection_count_median": 24518.5,
+            "selection_count_min": 10700
+          },
+          {
+            "fraction_ever_selected": 1.0,
+            "never_selected": 0,
+            "selection_count_max": 35866,
+            "selection_count_median": 24858.5,
+            "selection_count_min": 931
+          },
+          {
+            "fraction_ever_selected": 1.0,
+            "never_selected": 0,
+            "selection_count_max": 33711,
+            "selection_count_median": 24853.0,
+            "selection_count_min": 16392
+          }
+        ]
+      },
+      "validation": {
+        "accuracy": 0.9812,
+        "all_zero_fraction": 0.0,
+        "errors": 188,
+        "images": 10000,
+        "layer_accuracy": [
+          0.463,
+          0.9531,
+          0.977
+        ],
+        "mean_margin": 0.21439826488494873,
+        "numerical_health": "finite",
+        "per_class_accuracy": [
+          0.9870903674280039,
+          0.9908759124087592,
+          0.9869739478957916,
+          0.9696969696969697,
+          0.9838709677419355,
+          0.9706214689265537,
+          0.9939516129032258,
+          0.9760994263862333,
+          0.9725330620549338,
+          0.9785276073619632
+        ],
+        "utilization": [
+          {
+            "fraction_ever_selected": 1.0,
+            "never_selected": 0,
+            "selection_count_max": 8110,
+            "selection_count_median": 4905.5,
+            "selection_count_min": 2149
+          },
+          {
+            "fraction_ever_selected": 1.0,
+            "never_selected": 0,
+            "selection_count_max": 7194,
+            "selection_count_median": 4969.0,
+            "selection_count_min": 184
+          },
+          {
+            "fraction_ever_selected": 1.0,
+            "never_selected": 0,
+            "selection_count_max": 6824,
+            "selection_count_median": 4976.5,
+            "selection_count_min": 3252
+          }
+        ]
+      }
+    },
+    {
+      "dropout": 0.3,
+      "evaluation_preserved_state": true,
+      "path": "runs/hebbian-mnist-connected-dropout100-validation/drop30/seed10101/final.npz",
+      "seed": 10101,
+      "state_sha256": "ac46c50e65e3f884ce3cce0f93e19b45acde3f288350c91364d4c4182dac70bc",
+      "training": {
+        "accuracy": 0.99968,
+        "all_zero_fraction": 0.0,
+        "errors": 16,
+        "images": 50000,
+        "layer_accuracy": [
+          0.42572,
+          0.98202,
+          0.9989
+        ],
+        "mean_margin": 0.23073810338974,
+        "numerical_health": "finite",
+        "per_class_accuracy": [
+          1.0,
+          1.0,
+          0.9997983870967742,
+          0.9994126859827721,
+          0.999381443298969,
+          1.0,
+          1.0,
+          0.9998083924123395,
+          0.9995891536565324,
+          0.9987929993964997
+        ],
+        "utilization": [
+          {
+            "fraction_ever_selected": 1.0,
+            "never_selected": 0,
+            "selection_count_max": 41392,
+            "selection_count_median": 24672.5,
+            "selection_count_min": 9531
+          },
+          {
+            "fraction_ever_selected": 1.0,
+            "never_selected": 0,
+            "selection_count_max": 36058,
+            "selection_count_median": 24823.5,
+            "selection_count_min": 151
+          },
+          {
+            "fraction_ever_selected": 1.0,
+            "never_selected": 0,
+            "selection_count_max": 34321,
+            "selection_count_median": 24854.5,
+            "selection_count_min": 16397
+          }
+        ]
+      },
+      "validation": {
+        "accuracy": 0.9823,
+        "all_zero_fraction": 0.0,
+        "errors": 177,
+        "images": 10000,
+        "layer_accuracy": [
+          0.4194,
+          0.9581,
+          0.9782
+        ],
+        "mean_margin": 0.22191278636455536,
+        "numerical_health": "finite",
+        "per_class_accuracy": [
+          0.9860973187686196,
+          0.9936131386861314,
+          0.9869739478957916,
+          0.9745845552297165,
+          0.9798387096774194,
+          0.9740112994350283,
+          0.9929435483870968,
+          0.9780114722753346,
+          0.9766022380467956,
+          0.9785276073619632
+        ],
+        "utilization": [
+          {
+            "fraction_ever_selected": 1.0,
+            "never_selected": 0,
+            "selection_count_max": 8259,
+            "selection_count_median": 4927.5,
+            "selection_count_min": 1905
+          },
+          {
+            "fraction_ever_selected": 1.0,
+            "never_selected": 0,
+            "selection_count_max": 7177,
+            "selection_count_median": 4959.0,
+            "selection_count_min": 26
+          },
+          {
+            "fraction_ever_selected": 1.0,
+            "never_selected": 0,
+            "selection_count_max": 6956,
+            "selection_count_median": 4969.0,
+            "selection_count_min": 3241
+          }
+        ]
+      }
+    },
+    {
+      "dropout": 0.3,
+      "evaluation_preserved_state": true,
+      "path": "runs/hebbian-mnist-connected-dropout100-validation/drop30/seed10102/final.npz",
+      "seed": 10102,
+      "state_sha256": "c211ccca1076d0b032ea883340b225e85af4b931f30ec6d3e5cb036d86dc25d8",
+      "training": {
+        "accuracy": 0.9996,
+        "all_zero_fraction": 0.0,
+        "errors": 20,
+        "images": 50000,
+        "layer_accuracy": [
+          0.44692,
+          0.98142,
+          0.9988
+        ],
+        "mean_margin": 0.23050497472286224,
+        "numerical_health": "finite",
+        "per_class_accuracy": [
+          1.0,
+          1.0,
+          0.9997983870967742,
+          0.9990211433046202,
+          0.999381443298969,
+          0.9997795414462081,
+          1.0,
+          0.9998083924123395,
+          0.9995891536565324,
+          0.9985918326292497
+        ],
+        "utilization": [
+          {
+            "fraction_ever_selected": 1.0,
+            "never_selected": 0,
+            "selection_count_max": 40463,
+            "selection_count_median": 24525.5,
+            "selection_count_min": 10723
+          },
+          {
+            "fraction_ever_selected": 1.0,
+            "never_selected": 0,
+            "selection_count_max": 36019,
+            "selection_count_median": 24814.0,
+            "selection_count_min": 396
+          },
+          {
+            "fraction_ever_selected": 1.0,
+            "never_selected": 0,
+            "selection_count_max": 35232,
+            "selection_count_median": 24916.0,
+            "selection_count_min": 16580
+          }
+        ]
+      },
+      "validation": {
+        "accuracy": 0.9824,
+        "all_zero_fraction": 0.0,
+        "errors": 176,
+        "images": 10000,
+        "layer_accuracy": [
+          0.4448,
+          0.9569,
+          0.9773
+        ],
+        "mean_margin": 0.22158049046993256,
+        "numerical_health": "finite",
+        "per_class_accuracy": [
+          0.9880834160873883,
+          0.9927007299270073,
+          0.9859719438877755,
+          0.9736070381231672,
+          0.9808467741935484,
+          0.9728813559322034,
+          0.9939516129032258,
+          0.9780114722753346,
+          0.9745676500508647,
+          0.9815950920245399
+        ],
+        "utilization": [
+          {
+            "fraction_ever_selected": 1.0,
+            "never_selected": 0,
+            "selection_count_max": 8161,
+            "selection_count_median": 4902.5,
+            "selection_count_min": 2070
+          },
+          {
+            "fraction_ever_selected": 1.0,
+            "never_selected": 0,
+            "selection_count_max": 7255,
+            "selection_count_median": 4954.5,
+            "selection_count_min": 84
+          },
+          {
+            "fraction_ever_selected": 1.0,
+            "never_selected": 0,
+            "selection_count_max": 7112,
+            "selection_count_median": 4969.0,
+            "selection_count_min": 3290
+          }
+        ]
+      }
+    }
+  ],
+  "official_test_used": false,
+  "prior_validation_reuse": true,
+  "selected": {
+    "dropout": 0.3,
+    "mean_validation": 0.9823500000000001,
+    "training_errors": [
+      16,
+      20
+    ],
+    "validation_errors": [
+      177,
+      176
+    ]
+  },
+  "source_and_backend_unchanged": true,
+  "target_985_both_seeds": false,
+  "training_995_both_seeds": true
+}

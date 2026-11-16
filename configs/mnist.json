@@ -1,0 +1,28 @@
+{
+  "dataset": "mnist",
+  "seed": 10102,
+  "epochs": 100,
+  "schedule": "constant20_cosine80",
+  "initial_rate": 0.00075,
+  "config": {
+    "batch": 32,
+    "direction_mix": [
+      0.125,
+      0.875
+    ],
+    "dropout": 0.3,
+    "margin": 0.1,
+    "widths": [
+      256,
+      256,
+      256
+    ],
+    "winners": [
+      128,
+      128,
+      128
+    ]
+  },
+  "training_images": 60000,
+  "test_images": 10000
+}

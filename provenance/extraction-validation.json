@@ -1,0 +1,14 @@
+{
+  "status": "passed",
+  "original_python_reference_parity": "bitwise identical on deterministic synthetic minibatches",
+  "original_schedules": "exact equality at all 101 completed-epoch positions",
+  "mojo_sources_verbatim": 16,
+  "original_input_hashes_unchanged": 44,
+  "original_paper_checkpoint_compatibility": {
+    "runs/hebbian-mnist-connected-drop30-full/full/seed10102/final.npz": "1e2be23506cefd8a4fa63f0472375c8a7af93f962396f1c2763f9a1174224f7b",
+    "runs/hebbian-conv-cifar10-connected-full/final.npz": "9875e2a2bbe51d0e671e9b08c19ed0b877d3ddd37bae5c6f723324c74d44cc8f"
+  },
+  "dataset_training_performed": false,
+  "synthetic_update_checks": true,
+  "extracted_gpu_helper_bodies_verbatim": true
+}

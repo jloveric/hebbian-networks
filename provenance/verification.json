@@ -1,0 +1,103 @@
+{
+  "status": "passed",
+  "date": "2026-11-15",
+  "environment": {
+    "python": "3.14.5",
+    "numpy": "2.5.3",
+    "mojo": "1.2.0",
+    "max": "26.7.0",
+    "gpu": "NVIDIA GeForce RTX 4090"
+  },
+  "checks": {
+    "pytest": {
+      "passed": 7,
+      "failed": 0,
+      "includes_epoch_boundary_resume_parity": true
+    },
+    "gpu": {
+      "status": "passed",
+      "results": [
+        {
+          "dataset": "mnist",
+          "config": {
+            "widths": [
+              8,
+              8
+            ],
+            "winners": [
+              4,
+              4
+            ],
+            "batch": 4,
+            "margin": 0.1,
+            "dropout": 0.3,
+            "direction_mix": [
+              0.125,
+              0.875
+            ]
+          },
+          "images": 7,
+          "gpu": true,
+          "forward": true,
+          "local_updates": true,
+          "checkpoint_roundtrip": true
+        },
+        {
+          "dataset": "cifar10",
+          "config": {
+            "channels": [
+              4,
+              4
+            ],
+            "winners": [
+              2,
+              2
+            ],
+            "kernels": [
+              3,
+              3
+            ],
+            "pool_after": [
+              true,
+              false
+            ],
+            "columns": 10,
+            "batch": 2,
+            "rate": 0.00075,
+            "margin": 0.05,
+            "dropout_probability": 0.2,
+            "direction_history": 0.125,
+            "history_decay": 0.99,
+            "observation_balance": "image"
+          },
+          "images": 2,
+          "gpu": true,
+          "forward": true,
+          "local_updates": true,
+          "checkpoint_roundtrip": true
+        }
+      ]
+    },
+    "original_source_and_checkpoint_compatibility": {
+      "status": "passed",
+      "original_python_reference_parity": "bitwise identical on deterministic synthetic minibatches",
+      "original_schedules": "exact equality at all 101 completed-epoch positions",
+      "mojo_sources_verbatim": 16,
+      "original_input_hashes_unchanged": 44,
+      "original_paper_checkpoint_compatibility": {
+        "runs/hebbian-mnist-connected-drop30-full/full/seed10102/final.npz": "1e2be23506cefd8a4fa63f0472375c8a7af93f962396f1c2763f9a1174224f7b",
+        "runs/hebbian-conv-cifar10-connected-full/final.npz": "9875e2a2bbe51d0e671e9b08c19ed0b877d3ddd37bae5c6f723324c74d44cc8f"
+      },
+      "dataset_training_performed": false,
+      "synthetic_update_checks": true,
+      "extracted_gpu_helper_bodies_verbatim": true
+    },
+    "packaging": {
+      "wheel_built": true,
+      "mojo_sources_in_wheel": 17,
+      "recipes_in_wheel": 2,
+      "isolated_install_outside_both_checkouts": true
+    }
+  },
+  "full_dataset_training_launched": false
+}

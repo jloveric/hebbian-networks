@@ -1,0 +1,39 @@
+{
+  "dataset": "cifar10",
+  "seed": 10101,
+  "epochs": 100,
+  "schedule": "constant20_cosine80",
+  "initial_rate": 0.00075,
+  "config": {
+    "channels": [
+      128,
+      128,
+      128
+    ],
+    "winners": [
+      8,
+      8,
+      8
+    ],
+    "kernels": [
+      3,
+      3,
+      5
+    ],
+    "pool_after": [
+      true,
+      true,
+      false
+    ],
+    "columns": 10,
+    "batch": 32,
+    "rate": 0.00075,
+    "margin": 0.05,
+    "dropout_probability": 0.2,
+    "direction_history": 0.125,
+    "history_decay": 0.99,
+    "observation_balance": "image"
+  },
+  "training_images": 50000,
+  "test_images": 10000
+}
