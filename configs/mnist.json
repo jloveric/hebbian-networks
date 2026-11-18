@@ -1,6 +1,7 @@
 {
   "dataset": "mnist",
   "seed": 10102,
+  "paper_seeds": [10102, 10103, 10104, 10105],
   "epochs": 100,
   "schedule": "constant20_cosine80",
   "initial_rate": 0.00075,
@@ -10,7 +11,8 @@
       0.125,
       0.875
     ],
-    "dropout": 0.3,
+    "dropout": 0.0,
+    "integration": "semi_implicit",
     "margin": 0.1,
     "widths": [
       256,

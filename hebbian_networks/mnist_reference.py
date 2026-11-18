@@ -13,11 +13,16 @@ def statistics(u, h, signs):
     return a, q, n
 
 
-def commit(bank, a, q, n, rate):
+def commit(bank, a, q, n, rate, *, direction_mix=(.125, .875), integration="semi_implicit"):
     active = n > 0
     w, m = bank["w"], bank["m"]
-    d = np.sign(np.float32(.125)*m+np.float32(.875)*a)
+    d = np.sign(np.float32(direction_mix[0])*m+np.float32(direction_mix[1])*a)
     step = np.float32(rate)/np.float32(np.sqrt(w.shape[-1]))
-    bank["w"][active] = ((w+step*d)/(1+np.float32(rate)*q[:, :, None]))[active]
+    damping = np.float32(rate)*q[:, :, None]
+    if integration == "explicit":
+        updated = w+step*d-damping*w
+    else:
+        updated = (w+step*d)/(1+damping)
+    bank["w"][active] = updated[active]
     bank["m"][active] = (np.float32(.99)*m+np.float32(.01)*a)[active]
     bank["clock"] += active

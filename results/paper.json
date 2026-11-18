@@ -1,35 +1,20 @@
 {
-  "status": "passed",
+  "scope": "Original dropout-free runs in the TMLR paper",
+  "source": "paper/tmlr/paired-evidence.json",
+  "source_sha256": "a7eab8683b771b8fa4983eb7790eaea8bb72de8de2f5e218790fd493a1c01182",
+  "prior_validation_and_test_reuse": true,
   "results": [
     {
-      "dataset": "MNIST",
-      "seed": 10102,
-      "epochs": 100,
-      "training_images": 60000,
-      "test": {
-        "images": 10000,
-        "errors": 166,
-        "accuracy": 0.9834
-      },
-      "validation_accuracy": 0.9824,
-      "validation_candidates": [
-        {
-          "seed": 10101,
-          "errors": 177
-        },
-        {
-          "seed": 10102,
-          "errors": 176
-        }
-      ],
-      "learned_weights": 15121920,
+      "dataset": "mnist",
+      "integration": "semi_implicit",
       "config": {
         "batch": 32,
         "direction_mix": [
           0.125,
           0.875
         ],
-        "dropout": 0.3,
+        "dropout": 0.0,
+        "integration": "semi_implicit",
         "margin": 0.1,
         "widths": [
           256,
@@ -41,30 +26,141 @@
           128,
           128
         ]
-      }
-    },
-    {
-      "dataset": "CIFAR-10",
-      "seed": 10101,
-      "epochs": 100,
-      "training_images": 50000,
-      "test": {
-        "images": 10000,
-        "errors": 1950,
-        "accuracy": 0.805
       },
-      "validation_accuracy": 0.7983,
-      "validation_candidates": [
-        {
-          "seed": 10101,
-          "errors": 2017
-        },
+      "epochs": 100,
+      "training_images": 60000,
+      "test_images": 10000,
+      "mean_accuracy_percent": 98.1375,
+      "sample_sd_points": 0.04112987559751168,
+      "min_accuracy_percent": 98.1,
+      "max_accuracy_percent": 98.19,
+      "runs": [
         {
           "seed": 10102,
-          "errors": 2064
+          "accuracy_percent": 98.1,
+          "errors": 190,
+          "initial_state_sha256": "9f2d409cc2db2fd6ec501a1862c5fe687e5a1361f9505577ac643ebcb921f81d",
+          "state_sha256": "6ddd50298cb13514d648c00cce1fa100f3f2d3cb446f609b754f11b0c3ccdaed",
+          "checkpoint_sha256": "54c980d3de9ebd4103c3ec79ce4486ff3fe89db20a699355fcb509c1df4dba21",
+          "record": "paper-runs/mnist/semi_implicit/seed10102.json",
+          "source": "runs/paper-lion-dropout-ablations/mnist/implicit-no-dropout/official-test/results.json",
+          "record_sha256": "44691a405b5cfd0931ba2930598d71bd8db025041be3757c07d5385fa80d3ca2"
+        },
+        {
+          "seed": 10103,
+          "accuracy_percent": 98.19,
+          "errors": 181,
+          "initial_state_sha256": "4ecfda015b77ad28a31cc8e0a7d875b8df52705703b365b623fdce64981b1662",
+          "state_sha256": "8efe4f74e6922dff29d425cf5448ae0d9f41cfb768908c00c4521ed0d9a8604b",
+          "checkpoint_sha256": "54a07e187c1e487eccaa29036b636f2db92f33e705e00d03cc81e643c535182e",
+          "record": "paper-runs/mnist/semi_implicit/seed10103.json",
+          "source": "runs/paper-lion-dropout-ablations/additional-seeds/mnist/seed10103/implicit-no-dropout/official-test/results.json",
+          "record_sha256": "9588050aad2fbfbc7b644c01bcf31c0c6133f6e8c3bfd7ea789558cd0b2120f0"
+        },
+        {
+          "seed": 10104,
+          "accuracy_percent": 98.11,
+          "errors": 189,
+          "initial_state_sha256": "62354b4cc25a6aba2d8c70a388cdb9db07de3ef36a7acbafe2662c02ec388271",
+          "state_sha256": "2fa27800d30ffe46f570adb82056589b73b773d3e09b173b62c507cb29e0d1bb",
+          "checkpoint_sha256": "28849af6c6c6ead7ddeb83f0ffb9eb4a5229142aa6c7b041fd192463d1535298",
+          "record": "paper-runs/mnist/semi_implicit/seed10104.json",
+          "source": "runs/paper-lion-dropout-ablations/additional-seeds/mnist/seed10104/implicit-no-dropout/official-test/results.json",
+          "record_sha256": "6292334dc8e4e6d5ba167c0d6a8af778dce2bd4983c493f1cd577ad8d8db27f1"
+        },
+        {
+          "seed": 10105,
+          "accuracy_percent": 98.15,
+          "errors": 185,
+          "initial_state_sha256": "44ffc692781bb3cda1e683907f1f99615e629aca19189ea4ec17837cb5a463de",
+          "state_sha256": "1c0be13e71c091ce2b02147d5f4e76b70e8622768567f2928b4019bd002f825f",
+          "checkpoint_sha256": "83bba078b01f615cad39bb92398bafc044b6c5f7f4e33ed1cc0de3287ded1b52",
+          "record": "paper-runs/mnist/semi_implicit/seed10105.json",
+          "source": "runs/paper-lion-dropout-ablations/additional-seeds/mnist/seed10105/implicit-no-dropout/official-test/results.json",
+          "record_sha256": "bebd47004bb825b1405ebe58db29bd01c6b46d16957fb9fd7d88b1f1f6af795a"
         }
-      ],
-      "learned_weights": 55744000,
+      ]
+    },
+    {
+      "dataset": "mnist",
+      "integration": "explicit",
+      "config": {
+        "batch": 32,
+        "direction_mix": [
+          0.125,
+          0.875
+        ],
+        "dropout": 0.0,
+        "integration": "explicit",
+        "margin": 0.1,
+        "widths": [
+          256,
+          256,
+          256
+        ],
+        "winners": [
+          128,
+          128,
+          128
+        ]
+      },
+      "epochs": 100,
+      "training_images": 60000,
+      "test_images": 10000,
+      "mean_accuracy_percent": 98.1875,
+      "sample_sd_points": 0.08995369179008861,
+      "min_accuracy_percent": 98.06,
+      "max_accuracy_percent": 98.27,
+      "runs": [
+        {
+          "seed": 10102,
+          "accuracy_percent": 98.22,
+          "errors": 178,
+          "initial_state_sha256": "9f2d409cc2db2fd6ec501a1862c5fe687e5a1361f9505577ac643ebcb921f81d",
+          "state_sha256": "07199385c1434f435e8bf6e158583f02d09227f591d7e59143568f471cb3c803",
+          "checkpoint_sha256": "f45683be262b6003079d30ddaf68a1f3dad75ba687830f0575956d138d9c3de7",
+          "record": "paper-runs/mnist/explicit/seed10102.json",
+          "source": "runs/paper-lion-dropout-ablations/mnist/explicit-no-dropout/official-test/results.json",
+          "record_sha256": "2ce88a2fc195c6f1e43692aa09ec90cd04be8698486e6425777f105d08597ea0"
+        },
+        {
+          "seed": 10103,
+          "accuracy_percent": 98.27,
+          "errors": 173,
+          "initial_state_sha256": "4ecfda015b77ad28a31cc8e0a7d875b8df52705703b365b623fdce64981b1662",
+          "state_sha256": "f9e0c2e78b08c6fb456cea547947575871409dfc3349d36f2ce9cb82fc202fb7",
+          "checkpoint_sha256": "d85eb885c1d0d5a7fb51b477fb55259623eb4e38e964dd01c76755369531d7c7",
+          "record": "paper-runs/mnist/explicit/seed10103.json",
+          "source": "runs/paper-lion-dropout-ablations/additional-seeds/mnist/seed10103/explicit-no-dropout/official-test/results.json",
+          "record_sha256": "05ffad2c136644b33d34d3667cc0eb0c2b2de5eec83db0e2c09b9c6ae7ec3e20"
+        },
+        {
+          "seed": 10104,
+          "accuracy_percent": 98.06,
+          "errors": 194,
+          "initial_state_sha256": "62354b4cc25a6aba2d8c70a388cdb9db07de3ef36a7acbafe2662c02ec388271",
+          "state_sha256": "d2bf198cac7aea9acf2195fab260b7b8ac0aea2c213e8860e3cc7293abc92cdc",
+          "checkpoint_sha256": "864b9a3e4cd1e96ca47396a27ea58c56934d58808e94eea035925f0bf37b9a12",
+          "record": "paper-runs/mnist/explicit/seed10104.json",
+          "source": "runs/paper-lion-dropout-ablations/additional-seeds/mnist/seed10104/explicit-no-dropout/official-test/results.json",
+          "record_sha256": "fbd542d470e7a96344dcfb19ab0073948db072ff915f1ea0d971b252694f9569"
+        },
+        {
+          "seed": 10105,
+          "accuracy_percent": 98.2,
+          "errors": 180,
+          "initial_state_sha256": "44ffc692781bb3cda1e683907f1f99615e629aca19189ea4ec17837cb5a463de",
+          "state_sha256": "ae74651dea781aad0f6f1320265f3cb077157a1a539c81f30333c6491d5bd825",
+          "checkpoint_sha256": "7d822f41c5093a66dae55db6612a087be2e1752b48b8dd519c63f300a0334fc1",
+          "record": "paper-runs/mnist/explicit/seed10105.json",
+          "source": "runs/paper-lion-dropout-ablations/additional-seeds/mnist/seed10105/explicit-no-dropout/official-test/results.json",
+          "record_sha256": "c450dbff3a29adab29b4b8c5e2f7c15529de83034780137601efc64544516924"
+        }
+      ]
+    },
+    {
+      "dataset": "cifar10",
+      "integration": "semi_implicit",
       "config": {
         "channels": [
           128,
@@ -90,33 +186,153 @@
         "batch": 32,
         "rate": 0.00075,
         "margin": 0.05,
-        "dropout_probability": 0.2,
+        "dropout_probability": 0.0,
+        "integration": "semi_implicit",
         "direction_history": 0.125,
         "history_decay": 0.99,
         "observation_balance": "image"
-      }
+      },
+      "epochs": 100,
+      "training_images": 50000,
+      "test_images": 10000,
+      "mean_accuracy_percent": 80.6875,
+      "sample_sd_points": 0.28194266556636427,
+      "min_accuracy_percent": 80.41,
+      "max_accuracy_percent": 81.08,
+      "runs": [
+        {
+          "seed": 10101,
+          "accuracy_percent": 81.08,
+          "errors": 1892,
+          "initial_state_sha256": "ae2ec503052d67a0201d070539506568aa9ad1d3f2f715b5533f9f46eed32aca",
+          "state_sha256": "2f98aa66289c4e797f52779d2279a532544cda19b8fec6e59c8f6f67441c8579",
+          "checkpoint_sha256": "c39f0d1f3bfb30a20f709eeb80a070d8d4522b237da47a8377e0e39478c2ce5d",
+          "record": "paper-runs/cifar10/semi_implicit/seed10101.json",
+          "source": "runs/paper-lion-dropout-ablations/cifar10/implicit-no-dropout/official-test/results.json",
+          "record_sha256": "0baf3d02ccb0e4e27391fabbcbda389902547957fd539b7da000d8ac3376e721"
+        },
+        {
+          "seed": 10103,
+          "accuracy_percent": 80.61,
+          "errors": 1939,
+          "initial_state_sha256": "6f2f4d4cae0dd2ea02a5e788164b94966dd5f42e8bdb1dafe6bfd8757a83480a",
+          "state_sha256": "2eae267ad11088319ac21d6a4f40f7e984e3d61d592ca58a6b9b98ce896b28e1",
+          "checkpoint_sha256": "dc055a2a1163146918ca6783b42c627fae951735316049232ca6518743b8deee",
+          "record": "paper-runs/cifar10/semi_implicit/seed10103.json",
+          "source": "runs/paper-lion-dropout-ablations/additional-seeds/cifar10/seed10103/implicit-no-dropout/official-test/results.json",
+          "record_sha256": "90d1575bb85c540e2c54e674935728afb3f524bc631ce4e909d69a6ef6ad0646"
+        },
+        {
+          "seed": 10104,
+          "accuracy_percent": 80.41,
+          "errors": 1959,
+          "initial_state_sha256": "a15f2e3bd27708e80ee550a1c4945911821b5de679c5f1a09488b37245285df3",
+          "state_sha256": "84d61da34d754f8742f46f64ecdf87139e2362559b835180c8dd18284a12665b",
+          "checkpoint_sha256": "2b3ebe20d16baf5cf0835011b7466ac5a6b1829d4f06fafd540767adb43f35a7",
+          "record": "paper-runs/cifar10/semi_implicit/seed10104.json",
+          "source": "runs/paper-lion-dropout-ablations/additional-seeds/cifar10/seed10104/implicit-no-dropout/official-test/results.json",
+          "record_sha256": "359853ae30a9dc487e9600e331be3442f403eeb72736b1802b883f957fb496e5"
+        },
+        {
+          "seed": 10105,
+          "accuracy_percent": 80.65,
+          "errors": 1935,
+          "initial_state_sha256": "d73481960a778b2d6f81c4bd51e0b2a56770fc8ebdaf2f92d31450bbd48a4d72",
+          "state_sha256": "f1b6148682f6b5357784dd02ca62d71f1d12ac5eebc24566fd8f3473ccec99b5",
+          "checkpoint_sha256": "6df94b7925529f4a81310e4a4af10a1388272dcc5ae1bea910c6e86c9d3b3803",
+          "record": "paper-runs/cifar10/semi_implicit/seed10105.json",
+          "source": "runs/paper-lion-dropout-ablations/additional-seeds/cifar10/seed10105/implicit-no-dropout/official-test/results.json",
+          "record_sha256": "49f8478bfd3a9b5aaf9b40d903a987e16c1be07706b88ec92bc8b7f2ad9ec338"
+        }
+      ]
+    },
+    {
+      "dataset": "cifar10",
+      "integration": "explicit",
+      "config": {
+        "channels": [
+          128,
+          128,
+          128
+        ],
+        "winners": [
+          8,
+          8,
+          8
+        ],
+        "kernels": [
+          3,
+          3,
+          5
+        ],
+        "pool_after": [
+          true,
+          true,
+          false
+        ],
+        "columns": 10,
+        "batch": 32,
+        "rate": 0.00075,
+        "margin": 0.05,
+        "dropout_probability": 0.0,
+        "integration": "explicit",
+        "direction_history": 0.125,
+        "history_decay": 0.99,
+        "observation_balance": "image"
+      },
+      "epochs": 100,
+      "training_images": 50000,
+      "test_images": 10000,
+      "mean_accuracy_percent": 80.6675,
+      "sample_sd_points": 0.15755951256588432,
+      "min_accuracy_percent": 80.45,
+      "max_accuracy_percent": 80.82,
+      "runs": [
+        {
+          "seed": 10101,
+          "accuracy_percent": 80.67,
+          "errors": 1933,
+          "initial_state_sha256": "ae2ec503052d67a0201d070539506568aa9ad1d3f2f715b5533f9f46eed32aca",
+          "state_sha256": "0ced39fa5b4d0afe057c3cc5d7938f85bd893c784c6c31d241fd68f16153996a",
+          "checkpoint_sha256": "ce1e2850148dd0708fd2a4725c51e04609d430e3d002c102a8dcd5613c67966a",
+          "record": "paper-runs/cifar10/explicit/seed10101.json",
+          "source": "runs/paper-lion-dropout-ablations/cifar10/explicit-no-dropout/official-test/results.json",
+          "record_sha256": "e9b56425264bdc25561ab8fee3ccc6ddb2c747a07533389212c9cab6ca9b35b9"
+        },
+        {
+          "seed": 10103,
+          "accuracy_percent": 80.45,
+          "errors": 1955,
+          "initial_state_sha256": "6f2f4d4cae0dd2ea02a5e788164b94966dd5f42e8bdb1dafe6bfd8757a83480a",
+          "state_sha256": "606b718b170a4d1e7214f762fab3540d9ec23d85e62839486550b974c45880d4",
+          "checkpoint_sha256": "bc1a9f443d7a28fb54fd86252dc844111b0463a51292e8da2c7ffa8e664383d0",
+          "record": "paper-runs/cifar10/explicit/seed10103.json",
+          "source": "runs/paper-lion-dropout-ablations/additional-seeds/cifar10/seed10103/explicit-no-dropout/official-test/results.json",
+          "record_sha256": "20110e7db906d63aba3489b005e07c8b121e7cd1b3f22fd0a17097cb7f3e12c8"
+        },
+        {
+          "seed": 10104,
+          "accuracy_percent": 80.73,
+          "errors": 1927,
+          "initial_state_sha256": "a15f2e3bd27708e80ee550a1c4945911821b5de679c5f1a09488b37245285df3",
+          "state_sha256": "6ab5fdfff20ab4722e2448cd93880cd9eda06834220f8009a12f68967eecefc1",
+          "checkpoint_sha256": "6807998e728393694068c7505d3bbb489a6ae914cc849ee67aa4f36c906ca1ca",
+          "record": "paper-runs/cifar10/explicit/seed10104.json",
+          "source": "runs/paper-lion-dropout-ablations/additional-seeds/cifar10/seed10104/explicit-no-dropout/official-test/results.json",
+          "record_sha256": "d6afc4f0101e2329570ebdc41de0fe1c0b2715c7d663f07a4ccb29fee86a309b"
+        },
+        {
+          "seed": 10105,
+          "accuracy_percent": 80.82,
+          "errors": 1918,
+          "initial_state_sha256": "d73481960a778b2d6f81c4bd51e0b2a56770fc8ebdaf2f92d31450bbd48a4d72",
+          "state_sha256": "48413dd1425d29285b9a83f40e8d022dc65bb6461e6d46f2e54e3148c4ee0f67",
+          "checkpoint_sha256": "482da79788edf7c76e4065deb7dbd685f4f00c2e725fa7d81bd1c174e6c9e9b8",
+          "record": "paper-runs/cifar10/explicit/seed10105.json",
+          "source": "runs/paper-lion-dropout-ablations/additional-seeds/cifar10/seed10105/explicit-no-dropout/official-test/results.json",
+          "record_sha256": "27abdb3004536a4fb94a365e82c71bcdbdf8fa66a777f87ba97a679ef2dfd3dc"
+        }
+      ]
     }
-  ],
-  "scope": "Saved measurements and checkpoint identities; no new training or inference",
-  "selection_rule": "For the chosen configuration, use the run with lowest final validation errors",
-  "selection_uses_test_scores": false,
-  "mnist_selection_note": "The historical runner retrained and tested both runs. The paper reports the one corresponding to the better validation score, which also has the higher test accuracy.",
-  "source_sha256": {
-    "runs/hebbian-mnist-connected-drop30-full/selected-recipe.json": "38163eb9e0fd40cba3a9712555db6a7f8ab2a31a77dbee71cf7473b53e116ad1",
-    "runs/hebbian-conv-cifar10-connected-full/selection.json": "08afb2862bf244cb2d67a39f6f157d2928854be5727278103402711e2ec1e7c5",
-    "runs/hebbian-mnist-connected-drop30-full/method.json": "1f7a9042aa09b6a167d24f48420f14596894c30e84392ffe1f28be53f52a2662",
-    "runs/hebbian-mnist-connected-drop30-full/full/seed10102/trajectory.json": "0d81dee82b9442f7fa0c8d481ee27d49e1f7962137eb796494e4c6c8aa9edc1a",
-    "runs/hebbian-mnist-connected-drop30-full/official-test/seed10102.json": "516cec719050aa67ebc4a92eb96d4b73ac5be922af53dc316d3a9967dbd111c6",
-    "runs/hebbian-conv-cifar10-connected-full/method.json": "aa479c3caf7ae7b05d80486db9b33166459adc194912fc2810ae6ae15cba722d",
-    "runs/hebbian-conv-cifar10-connected-full/trajectory.json": "9115960af1253cc83f7e0ddd9fbae0562e979028af5faac4ba092d5efba8460a",
-    "runs/hebbian-conv-cifar10-connected-full/official-test/results.json": "be2696156b9a7e58451d3c16d7c518bf78d0f859c51372958221c4400077ecaf"
-  },
-  "checkpoint_sha256": {
-    "runs/hebbian-mnist-connected-drop30-full/full/seed10102/final.npz": "1e2be23506cefd8a4fa63f0472375c8a7af93f962396f1c2763f9a1174224f7b",
-    "runs/hebbian-conv-cifar10-connected-full/final.npz": "9875e2a2bbe51d0e671e9b08c19ed0b877d3ddd37bae5c6f723324c74d44cc8f"
-  },
-  "historical_checkpoints": {},
-  "reported_models_per_dataset": 1,
-  "development_runs_per_candidate": 2,
-  "prior_validation_and_test_reuse": true
+  ]
 }

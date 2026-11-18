@@ -12,12 +12,18 @@ from hebbian_networks.train import evaluate_final, recipe, timestep
 from hebbian_networks.verify import check_mnist, check_cifar
 
 
-def test_mnist_reference_and_roundtrip():
-    check_mnist()
+@pytest.mark.parametrize(
+    "integration,dropout", [("semi_implicit", 0.), ("explicit", 0.), ("semi_implicit", .3)]
+)
+def test_mnist_reference_and_roundtrip(integration, dropout):
+    check_mnist(integration=integration, dropout=dropout)
 
 
-def test_cifar_reference_and_roundtrip():
-    check_cifar()
+@pytest.mark.parametrize(
+    "integration,dropout", [("semi_implicit", 0.), ("explicit", 0.), ("semi_implicit", .2)]
+)
+def test_cifar_reference_and_roundtrip(integration, dropout):
+    check_cifar(integration=integration, dropout=dropout)
 
 
 def test_counter_dropout_preserves_example_identity_across_chunks():
@@ -30,14 +36,31 @@ def test_counter_dropout_preserves_example_identity_across_chunks():
 
 
 def test_recipes_match_recorded_paper_evidence():
-    evidence = json.loads((common.REPO / "results/paper.json").read_text())
-    for dataset, name, model in (("mnist", "MNIST", mnist), ("cifar10", "CIFAR-10", cifar)):
-        settings = recipe(dataset)
-        recorded = next(r for r in evidence["results"] if r["dataset"] == name)
-        assert settings["seed"] == recorded["seed"]
-        assert asdict(model.Config(**settings["config"])) == asdict(model.Config(**recorded["config"]))
-        assert settings["training_images"] == recorded["training_images"]
-        assert settings["epochs"] == 100
+    results_dir = common.REPO / "results"
+    evidence = json.loads((results_dir / "paper.json").read_text())
+    for dataset, model, dropout_key in (("mnist", mnist, "dropout"),
+                                        ("cifar10", cifar, "dropout_probability")):
+        initial_hashes = {}
+        for integration in ("semi_implicit", "explicit"):
+            settings = recipe(dataset, integration)
+            recorded = next(r for r in evidence["results"]
+                            if r["dataset"] == dataset and r["integration"] == integration)
+            assert settings["config"][dropout_key] == 0
+            assert asdict(model.Config(**settings["config"])) == asdict(model.Config(**recorded["config"]))
+            assert settings["training_images"] == recorded["training_images"]
+            assert settings["epochs"] == recorded["epochs"] == 100
+            assert settings["seed"] == settings["paper_seeds"][0]
+            assert settings["paper_seeds"] == [r["seed"] for r in recorded["runs"]]
+            for run in recorded["runs"]:
+                path = results_dir / run["record"]
+                assert common.digest(path) == run["record_sha256"]
+                result = json.loads(path.read_text())
+                metrics = result["test" if dataset == "mnist" else "metrics"]
+                assert result["seed"] == run["seed"] and result["epoch"] == settings["epochs"]
+                assert metrics["images"] == settings["test_images"]
+                assert metrics["errors"] == run["errors"]
+                initial_hash = run["initial_state_sha256"]
+                assert initial_hashes.setdefault(run["seed"], initial_hash) == initial_hash
 
 
 def test_schedule_and_fixed_layer_scoring():

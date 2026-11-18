@@ -1,7 +1,7 @@
 [project]
 name = "hebbian-networks"
 version = "0.1.0"
-description = "Class-Guided Hebbian Networks: paper implementations for MNIST and CIFAR-10"
+description = "Supervised Hebbian Class Networks for MNIST and CIFAR-10"
 readme = "README.md"
 requires-python = ">=3.14,<3.15"
 dependencies = ["numpy==2.5.3"]

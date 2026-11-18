@@ -1,0 +1,55 @@
+{
+  "epoch": 100,
+  "evaluation_preserved_state": true,
+  "prior_test_reuse": true,
+  "seed": 10104,
+  "state_sha256": "2fa27800d30ffe46f570adb82056589b73b773d3e09b173b62c507cb29e0d1bb",
+  "test": {
+    "accuracy": 0.9811,
+    "all_zero_fraction": 0.0,
+    "errors": 189,
+    "images": 10000,
+    "layer_accuracy": [
+      0.5543,
+      0.9165,
+      0.9808
+    ],
+    "mean_margin": 0.20695839822292328,
+    "numerical_health": "finite",
+    "per_class_accuracy": [
+      0.9897959183673469,
+      0.9947136563876652,
+      0.9786821705426356,
+      0.9772277227722772,
+      0.9796334012219959,
+      0.9753363228699552,
+      0.9832985386221295,
+      0.980544747081712,
+      0.9753593429158111,
+      0.9742319127849356
+    ],
+    "utilization": [
+      {
+        "fraction_ever_selected": 1.0,
+        "never_selected": 0,
+        "selection_count_max": 7456,
+        "selection_count_median": 4966.5,
+        "selection_count_min": 3018
+      },
+      {
+        "fraction_ever_selected": 1.0,
+        "never_selected": 0,
+        "selection_count_max": 7254,
+        "selection_count_median": 5028.5,
+        "selection_count_min": 360
+      },
+      {
+        "fraction_ever_selected": 1.0,
+        "never_selected": 0,
+        "selection_count_max": 6993,
+        "selection_count_median": 5015.0,
+        "selection_count_min": 595
+      }
+    ]
+  }
+}

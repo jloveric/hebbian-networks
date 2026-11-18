@@ -1,23 +1,26 @@
-# Class-Guided Hebbian Networks
+# Supervised Hebbian Class Networks
 
 Standalone code for the jointly trained MNIST MLP and CIFAR-10 convolutional
-network reported in the TMLR draft. Every neuron/filter is assigned a class;
-all layers learn together using incident activities and local persistent
+network reported in the TMLR draft. Every neuron or filter is assigned a class,
+and all layers learn together using incident activities and local persistent
 statistics. Predictions use fixed sums of layer activities. Training uses no
 derivatives, backpropagation, propagated error vectors, or fitted classifier.
 
-| Dataset | Learned layers | Paper seed | Official test accuracy |
-|---|---|---:|---:|
-| MNIST | 3 fully connected layers, 2,560 neurons each | 10102 | 98.34% |
-| CIFAR-10 | 3 convolutional layers, 1,280 channels each | 10101 | 80.50% |
+Official epoch-100 test accuracy (%), shown as mean ± sample SD and range over
+four matched seeds for each update.
 
-These are recorded results from the original runs, not newly trained results
-from this extraction. [results/paper.json](results/paper.json) records the final
-checkpoint hashes and validation-based reporting selection. Original trajectories,
-selection records, and individual-layer scores are in [results/](results/).
-Historical validation and official-test reuse applies. In particular, the original
-MNIST runner trained and tested both full-data seeds; the paper reports the one
-corresponding to the better preceding validation result.
+| Dataset | Learned layers | Semi-implicit Lion | Explicit Lion |
+|---|---|---:|---:|
+| MNIST | 3 fully connected layers, 2,560 neurons each | 98.14 ± 0.04 (98.10–98.19) | 98.19 ± 0.09 (98.06–98.27) |
+| CIFAR-10 | 3 convolutional layers, 1,280 channels each | 80.69 ± 0.28 (80.41–81.08) | 80.67 ± 0.16 (80.45–80.82) |
+
+Both variants train from scratch without dropout, image augmentation, or
+weight averaging. The two updates use the same initialization and shuffled
+image order within each seed. [results/paper.json](results/paper.json) links to
+the 16 original test records and lists their final checkpoint hashes. The
+[earlier single-seed dropout runs](results/historical-paper.json) and their
+trajectories, selection records, and layer scores are archived in [results/](results/).
+The official test sets have been reused.
 
 ## Installation
 
@@ -37,51 +40,53 @@ be selected with `MOJO_BIN=/path/to/mojo`; otherwise `mojo` is found on `PATH`.
 Kernels compile on first use with floating-point contraction disabled. Build
 outputs go into `.cache/build/`, configurable with `HEBBIAN_BUILD_DIR`.
 
-## Reproduce the final paper runs
+## Reproduce the paper runs
+
+Each command trains one dataset, seed, and Lion update. The default update is
+semi-implicit. The default seeds are 10102 for MNIST and 10101 for CIFAR-10.
 
 ```bash
 uv run --extra gpu python -m hebbian_networks.train mnist
-uv run --extra gpu python -m hebbian_networks.train cifar10
+uv run --extra gpu python -m hebbian_networks.train cifar10 --integration explicit
 ```
 
 The commands download and checksum official data, recompute preprocessing
 statistics from the complete training set, initialize fresh weights, and train
-for the fixed 100 epochs. Run them sequentially. Default output directories are
-`runs/mnist/seed10102/` and `runs/cifar10/seed10101/`. Each writes an atomic
+for the fixed 100 epochs. Run them sequentially. The default output path is
+`runs/<dataset>/<integration>/seed<seed>/`. Each writes an atomic
 epoch-boundary `resume.npz`, a final checkpoint, a trajectory, source/build
 provenance, and an official-test result. Repeating the same command resumes the
 existing run. SIGINT/SIGTERM stop after the current epoch has been saved.
 `--output` and `--data-dir` accept explicit directories.
 
-The fixed recipes are [configs/mnist.json](configs/mnist.json) and
-[configs/cifar10.json](configs/cifar10.json). Both use batch 32 and initial step
-size 0.00075: constant through the first 20 epochs, then the original 80-epoch
-cosine schedule. The schedule is indexed by completed epochs: epoch 21 also uses
-0.00075, epoch 100 uses a positive step, and the saved post-training step is zero.
-MNIST uses 30% hidden-input dropout, 128 winners per group, and margin 0.10.
-CIFAR-10 uses 20% hidden-channel dropout, eight winners per group/location, and
-margin 0.05. Neither uses image augmentation or weight averaging.
+Both recipes use batch 32 and an initial step size of 0.00075 with the original
+20-epoch plateau and 80-epoch cosine schedule. The schedule is indexed by
+completed epochs, so epoch 21 also uses 0.00075. Epoch 100 uses a positive step
+and the saved post-training step is zero. MNIST uses 128 winners per group and
+margin 0.10. CIFAR-10 uses eight winners per group per location and margin 0.05.
+Both recipes set dropout to zero. [MNIST recipe](configs/mnist.json) · [CIFAR-10 recipe](configs/cifar10.json)
 
-The standalone runner reproduces the selected final recipe directly; it does
-not repeat the historical architecture and hyperparameter searches. To repeat
-the other historical full-data MNIST seed explicitly:
+Run the full matched comparison with both updates and all four seeds per dataset.
 
 ```bash
-uv run --extra gpu python -m hebbian_networks.train mnist --seed 10101
+for integration in semi_implicit explicit; do
+  for seed in 10102 10103 10104 10105; do
+    uv run --extra gpu python -m hebbian_networks.train mnist --integration "$integration" --seed "$seed" || exit 1
+  done
+  for seed in 10101 10103 10104 10105; do
+    uv run --extra gpu python -m hebbian_networks.train cifar10 --integration "$integration" --seed "$seed" || exit 1
+  done
+done
 ```
 
 Official-test data are evaluated only after the requested full-data run finishes
-epoch 100. The standalone command trains one requested seed; the original MNIST
-experiment waited for both seeds before testing either. Its learning equations,
-initialization, image orders, dropout streams, and final epoch are preserved.
-New runs may differ across hardware/toolchains; the archived scores are not a
-guarantee of bitwise reproduction in a different environment.
+epoch 100. New runs may differ across hardware and toolchains.
 
 ## Evaluate a final checkpoint
 
 ```bash
-uv run --extra gpu python -m hebbian_networks.evaluate mnist runs/mnist/seed10102/final.npz --layers
-uv run --extra gpu python -m hebbian_networks.evaluate cifar10 runs/cifar10/seed10101/final.npz --layers
+uv run --extra gpu python -m hebbian_networks.evaluate mnist runs/mnist/semi_implicit/seed10102/final.npz --layers
+uv run --extra gpu python -m hebbian_networks.evaluate cifar10 runs/cifar10/explicit/seed10101/final.npz --layers
 ```
 
 These commands also accept the original paper checkpoint format. `--layers`
@@ -96,10 +101,9 @@ included in the final score change. No weights are fitted or updated.
 - `hebbian_networks/competitive_conv_connected_groups.py`: mixed convolutional
   model, independent reference, and original dense GPU implementation.
 - `hebbian_networks/competitive_conv_connected_sparse.py`: the sparse accumulation
-  backend used for the final CIFAR-10 run, with unchanged checkpoint semantics.
-- `hebbian_networks/kernels/`: 16 required Mojo sources copied verbatim, plus the extracted
-  GPU view/buffer helpers in `competitive_gru.mojo`. That historical filename
-  is retained for import compatibility; the recurrent model code is omitted.
+  backend used for both CIFAR-10 updates in the paper.
+- `hebbian_networks/kernels/`: the original Mojo training kernels and their
+  dependencies, including the GPU view and buffer helpers in `competitive_gru.mojo`.
 - `common.py`, `data.py`, `mnist_reference.py`, `conv_reference.py`, `metrics.py`:
   the shared helpers extracted from the original experiment modules.
 - `train.py`, `evaluate.py`, `scoring.py`: focused standalone entry points.
@@ -112,18 +116,16 @@ uv run --extra gpu python -m hebbian_networks.verify --gpu
 ```
 
 The first command checks numerical behavior and serialization on small synthetic
-inputs. The second compiles the copied kernels and checks forward activities,
-local updates, deterministic dropout, inference immutability, and checkpoint
-round trips against independent NumPy calculations. It uses bounded synthetic
-minibatches and does not launch a paper training run.
+inputs. The second compiles the copied kernels and checks both dropout-free Lion
+updates, forward activities, inference immutability, and checkpoint round trips
+against independent NumPy calculations. It also checks compatibility with the
+earlier dropout configurations.
 
-Datasets, trained checkpoints, compiled binaries, historical sweeps, language
-models, and manuscript sources are not included. Relative `runs/...` paths in
-archived result JSON are provenance references, not required runtime inputs.
+The repository ships code and recorded results. The data files are downloaded
+on demand and checkpoints are written by the training command. Source
+`runs/...` paths in the result records identify the original experiment files.
 
-The extraction verification record is [provenance/verification.json](provenance/verification.json).
-It records seven passing tests, the GPU checks, original-checkpoint compatibility,
-and isolated wheel installation. Full dataset training was not rerun during extraction.
+Test and checkpoint verification are recorded in [provenance/verification.json](provenance/verification.json).
 
 ## License
 

@@ -10,7 +10,7 @@ from hebbian_networks.verify import same_state
 
 
 def test_interrupted_resume_matches_uninterrupted_training(tmp_path, monkeypatch):
-    config = model.Config(widths=(4, 4), winners=(2, 2), batch=4, dropout=.3)
+    config = model.Config(widths=(4, 4), winners=(2, 2), batch=4, integration="explicit")
     rng = np.random.default_rng(28)
     images = rng.normal(0, .2, (20, 12)).astype(np.float32)
     labels = np.tile(np.arange(10), 2)
@@ -36,7 +36,7 @@ def test_interrupted_resume_matches_uninterrupted_training(tmp_path, monkeypatch
     cpu = SimpleNamespace(Config=model.Config, initialize=lambda c, seed: model.initialize(c, seed, inputs=12),
         backend=lambda: (None, {}), load_checkpoint=model.load_checkpoint,
         save_checkpoint=model.save_checkpoint, run=run)
-    monkeypatch.setattr(runner, "recipe", lambda dataset: settings)
+    monkeypatch.setattr(runner, "recipe", lambda dataset, integration: settings)
     monkeypatch.setattr(runner, "model_for", lambda dataset: (cpu, metric))
     monkeypatch.setattr(runner, "source_hashes", lambda: {})
     monkeypatch.setattr(runner.data, "mnist_training", lambda directory: dict(ds))

@@ -26,11 +26,13 @@ class Config:
     margin: float = .10
     dropout: float = 0.
     direction_mix: tuple = (.125, .875)
+    integration: str = "semi_implicit"
 
     def __post_init__(self):
         for name in ("widths", "winners", "direction_mix"):
             object.__setattr__(self, name, tuple(getattr(self, name)))
-        if (not 2 <= len(self.widths) <= 4 or len(self.widths) != len(self.winners)
+        if (self.integration not in ("semi_implicit", "explicit")
+                or not 2 <= len(self.widths) <= 4 or len(self.widths) != len(self.winners)
                 or any(type(w) is not int or type(k) is not int or not 1 <= k <= w <= 512
                        for w, k in zip(self.widths, self.winners))
                 or type(self.batch) is not int or not 1 <= self.batch <= 256
@@ -111,18 +113,8 @@ def reference_train(state, images, labels, c, rate, reverse=False, *, image_ids=
         pending = [pooled.statistics(u, h, signs) for u, h in records]
         order = reversed(range(len(result))) if reverse else range(len(result))
         for layer in order:
-            if c.direction_mix == (.125, .875):
-                pooled.commit(result[layer], *pending[layer], rate)
-            else:
-                bank = result[layer]
-                a, q, n = pending[layer]
-                active = n > 0
-                direction = np.sign(np.float32(c.direction_mix[0])*bank["m"]+
-                                    np.float32(c.direction_mix[1])*a)
-                step = np.float32(rate)/np.float32(np.sqrt(bank["w"].shape[-1]))
-                bank["w"][active] = ((bank["w"]+step*direction)/(1+np.float32(rate)*q[:, :, None]))[active]
-                bank["m"][active] = (np.float32(.99)*bank["m"]+np.float32(.01)*a)[active]
-                bank["clock"] += active
+            pooled.commit(result[layer], *pending[layer], rate,
+                          direction_mix=c.direction_mix, integration=c.integration)
     return result
 
 

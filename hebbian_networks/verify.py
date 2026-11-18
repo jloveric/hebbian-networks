@@ -37,8 +37,9 @@ def checkpoint_roundtrip(model, state, config, mean):
         same_state(restored, state, exact=True)
 
 
-def check_mnist(gpu=False):
-    c = mnist.Config(widths=(8, 8), winners=(4, 4), batch=4, dropout=.3)
+def check_mnist(gpu=False, *, integration="semi_implicit", dropout=0.):
+    c = mnist.Config(widths=(8, 8), winners=(4, 4), batch=4,
+                     dropout=dropout, integration=integration)
     rng = np.random.default_rng(237)
     x = rng.normal(0, .2, (7, 12)).astype(np.float32)
     labels = np.array([0, 3, 5, 7, 9, 2, 4], np.int64)
@@ -64,16 +65,17 @@ def check_mnist(gpu=False):
                 forward=True, local_updates=True, checkpoint_roundtrip=True)
 
 
-def check_cifar(gpu=False):
+def check_cifar(gpu=False, *, integration="semi_implicit", dropout=0.):
     c = conv.Config(channels=(4, 4), winners=(2, 2), kernels=(3, 3),
-                    pool_after=(True, False), batch=2, rate=.00075, dropout_probability=.2)
+                    pool_after=(True, False), batch=2, rate=.00075,
+                    dropout_probability=dropout, integration=integration)
     rng = np.random.default_rng(813)
     images = rng.normal(0, .2, (2, 10, 10, 3)).astype(np.float32)
     labels = np.array([2, 8], np.int64)
     state = conv.initialize(c, 10101)
     before = conv.fingerprint(state)
     _, energy = conv.forward(state, images, c)
-    masks = conv.mask_plan(c, 10101, 2, len(images))
+    masks = conv.mask_plan(c, 10101, 2, len(images)) if dropout else None
     expected = copy_state(state)
     reverse = copy_state(state)
     conv.reference_train(expected, images, labels, c, masks=masks)
@@ -83,7 +85,7 @@ def check_cifar(gpu=False):
     assert conv.fingerprint(state) == before
     checkpoint_roundtrip(conv, expected, c, np.zeros(3, np.float32))
     if gpu:
-        for model in (conv, sparse):
+        for model in (conv, sparse) if integration == "semi_implicit" else (sparse,):
             packet = model.score(state, images, c)
             np.testing.assert_allclose(packet["energies"], energy, rtol=4e-5, atol=2e-6)
             assert conv.fingerprint(state) == before
@@ -98,7 +100,11 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--gpu", action="store_true")
     args = parser.parse_args()
-    print(json.dumps(dict(status="passed", results=[check_mnist(args.gpu), check_cifar(args.gpu)]), indent=2))
+    results = [check(args.gpu, integration=integration)
+               for integration in ("semi_implicit", "explicit")
+               for check in (check_mnist, check_cifar)]
+    results += [check_mnist(args.gpu, dropout=.3), check_cifar(args.gpu, dropout=.2)]
+    print(json.dumps(dict(status="passed", results=results), indent=2))
 
 
 if __name__ == "__main__":

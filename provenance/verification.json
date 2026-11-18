@@ -1,4 +1,71 @@
 {
+  "paired_paper_update": {
+    "status": "passed",
+    "date": "2026-11-17",
+    "environment": {
+      "python": "3.14.5",
+      "numpy": "2.5.3",
+      "mojo": "1.2.0 (2016d0cd)",
+      "gpu": "NVIDIA GeForce RTX 4090"
+    },
+    "pytest": {
+      "passed": 11,
+      "failed": 0
+    },
+    "gpu_synthetic_cases": 6,
+    "original_checkpoints": {
+      "evaluated": 16,
+      "exact_test_error_count": true,
+      "exact_per_layer_test_accuracy": true,
+      "state_unchanged": true
+    },
+    "first_training_minibatch": {
+      "bitwise_equal_to_original_binaries": true,
+      "results": [
+        {
+          "dataset": "mnist",
+          "integration": "semi_implicit",
+          "seed": 10102,
+          "batch_images": 32,
+          "mean_sha256": "2346044bd191b0e794d74caf75fd0f1353e948dc74f278d420fb404b081e597a",
+          "energies_sha256": "43f8590578abae4f8be5ad0e1836f7f4caae4da97475fd134f18e1b474a549c3",
+          "updated_state_sha256": "57e802aa8fa44b11c5efe308903ddea2c5096d1db22d68c20370c7d6f4ea1d90"
+        },
+        {
+          "dataset": "mnist",
+          "integration": "explicit",
+          "seed": 10102,
+          "batch_images": 32,
+          "mean_sha256": "2346044bd191b0e794d74caf75fd0f1353e948dc74f278d420fb404b081e597a",
+          "energies_sha256": "43f8590578abae4f8be5ad0e1836f7f4caae4da97475fd134f18e1b474a549c3",
+          "updated_state_sha256": "1559a3bb9825a4d5af964f3bd966ad149d6d2bb1ef1079d52c1d5a5b0b113500"
+        },
+        {
+          "dataset": "cifar10",
+          "integration": "semi_implicit",
+          "seed": 10101,
+          "batch_images": 32,
+          "mean_sha256": "fdd07e369079af1ab250887351c80d06286248748f0c33cb07465a52ba951cc0",
+          "energies_sha256": "7fb59d1fbfa772f161849a075371ac06202f8430ffda32b53f5b99c28b41fa12",
+          "updated_state_sha256": "46366b82b53086e8f645de69872972997f29775221b14e3dcb241553ed2abe3a"
+        },
+        {
+          "dataset": "cifar10",
+          "integration": "explicit",
+          "seed": 10101,
+          "batch_images": 32,
+          "mean_sha256": "fdd07e369079af1ab250887351c80d06286248748f0c33cb07465a52ba951cc0",
+          "energies_sha256": "7fb59d1fbfa772f161849a075371ac06202f8430ffda32b53f5b99c28b41fa12",
+          "updated_state_sha256": "4ab0db2893759aa204dce1168a98023602cb6b216a709653a487830d0a8aa3da"
+        }
+      ]
+    },
+    "wheel": {
+      "packaged_recipes_checked_outside_checkout": 2,
+      "copied_cifar_lion_kernel_present": true
+    },
+    "full_dataset_training_launched": false
+  },
   "status": "passed",
   "date": "2026-11-15",
   "environment": {

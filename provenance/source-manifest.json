@@ -1,4 +1,25 @@
 {
+  "paired_paper_update": {
+    "source_commit": "1d555050b775f9a69e38735fbb37ca8d96d61526",
+    "original_sha256": {
+      "accelerators/mojo/mnist_connected_groups.mojo": "57252959437d8e6e118736b7e1b22d178da7d9132554be7aa152a48347534397",
+      "accelerators/mojo/competitive_conv_connected_sparse_ablation.mojo": "0913c2c9ed8abe7eb66f73e745201f94a46c28f61d59dd3ddcc77ac0a7f03a30",
+      "accelerators/mojo/competitive_conv_connected_lion_ablation_ops.mojo": "c0b4d44d4ae4010fc631e76c977533d20d89a446c1c8bab3aa50a987e6c58744",
+      "experiments/mnist_connected_groups.py": "d725488a8427b9d1d8cef7630e34b7e89e3cf0894aa278e8360ebb8ce9f51c9b",
+      "experiments/competitive_conv_connected_groups.py": "47bd89c4f4455a7bcbb1afd1d6878ef661c70cba00cdbbe8ffb5ef95536bdad6",
+      "experiments/competitive_conv_connected_sparse_ablation.py": "7580121654b998f19dbeeadb199520f8bbd37d026a4eaac651cb19520015184d",
+      "experiments/competitive_conv_columns_batch_lion_image.py": "031355f5c3192c2d25ac731702793a455cd21ed9452cd9c0d4d202c70781a0df",
+      "experiments/run_paper_lion_dropout_ablations.py": "8e5766eb551db3209b6cfbc25de3fde52ec8524bc94c81ed5410c21ab5acbbbf",
+      "experiments/run_mnist_connected_final.py": "43c26f73876d35d2e4ac7b98766e1f91953326b2bbfc5bef22697dc70887b320",
+      "experiments/run_cifar_connected_full.py": "ca6f4a0af71efd6cfc90c7187c39ca75c596a072b48f7fc249837ec842af8aab",
+      "paper/tmlr/paired-evidence.json": "a7eab8683b771b8fa4983eb7790eaea8bb72de8de2f5e218790fd493a1c01182"
+    },
+    "adaptations": [
+      "The copied CIFAR-10 sparse kernel exports the standalone module name.",
+      "The experiment recipes use the standalone train and evaluate entry points.",
+      "The standalone CIFAR-10 runner skips constructing identity masks when dropout is zero."
+    ]
+  },
   "source_commit": "ba4dfe7d63bf363aa8d644fb95a214f324e9c4b9",
   "original_sha256": {
     "accelerators/mojo/competitive_conv_connected_sparse.mojo": "f624f8d0fbc753f22049f85e4d28b63797feb5b76361b7f5b7715db6e10c335c",

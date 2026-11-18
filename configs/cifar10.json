@@ -1,6 +1,7 @@
 {
   "dataset": "cifar10",
   "seed": 10101,
+  "paper_seeds": [10101, 10103, 10104, 10105],
   "epochs": 100,
   "schedule": "constant20_cosine80",
   "initial_rate": 0.00075,
@@ -29,7 +30,8 @@
     "batch": 32,
     "rate": 0.00075,
     "margin": 0.05,
-    "dropout_probability": 0.2,
+    "dropout_probability": 0.0,
+    "integration": "semi_implicit",
     "direction_history": 0.125,
     "history_decay": 0.99,
     "observation_balance": "image"

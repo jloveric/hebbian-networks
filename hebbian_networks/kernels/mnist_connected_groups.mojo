@@ -77,8 +77,8 @@ def statistics(u: R, h: R, signs: R, a: F, q: F, n: F,
         a[c, j, i] = value/max(count, 1)
 
 
-def commit(w: F, m: F, clock: J, a: R, q: R, n: R,
-           dimension_arg: Int64, rate: Float32, history_mix: Float32, current_mix: Float32):
+def commit_integration(w: F, m: F, clock: J, a: R, q: R, n: R,
+           dimension_arg: Int64, rate: Float32, history_mix: Float32, current_mix: Float32, explicit_arg: Int64):
     comptime MAX_THREADS_PER_BLOCK_METADATA = 256
     comptime assert w.flat_rank == m.flat_rank == clock.flat_rank == a.flat_rank == q.flat_rank == n.flat_rank == 3
     var c, j, lane = block_idx.z, block_idx.x, thread_idx.x
@@ -91,10 +91,20 @@ def commit(w: F, m: F, clock: J, a: R, q: R, n: R,
         var value = a[c, j, i]
         var signal = history_mix*old_m+current_mix*value
         var direction = Float32(Int(signal > 0)-Int(signal < 0))
-        w[c, j, i] = (w[c, j, i]+step*direction)/denominator
+        var old_w = w[c, j, i]
+        if explicit_arg != 0:
+            w[c, j, i] = old_w+step*direction-rate*q[0, c, j]*old_w
+        else:
+            w[c, j, i] = (old_w+step*direction)/denominator
         m[c, j, i] = 0.99*old_m+0.01*value
     if lane == 0:
         clock[0, c, j] += 1
+
+
+def commit(w: F, m: F, clock: J, a: R, q: R, n: R,
+           dimension_arg: Int64, rate: Float32, history_mix: Float32, current_mix: Float32):
+    """Preserve the original semi-implicit entry point for dependent kernels."""
+    commit_integration(w, m, clock, a, q, n, dimension_arg, rate, history_mix, current_mix, 0)
 
 
 def count_usage(h: R, usage: J, size_arg: Int64):
@@ -193,11 +203,12 @@ def run(packet: PythonObject) raises -> PythonObject:
             for ll in range(depth):
                 var l = depth-1-ll if Bool(py=packet["reverse"]) else ll
                 var width, dimension = layers[l].width, layers[l].dimension
-                ctx.enqueue_function[commit](view(layers[l].w, 10, width, dimension),
+                ctx.enqueue_function[commit_integration](view(layers[l].w, 10, width, dimension),
                     view(layers[l].m, 10, width, dimension), clock_view(layers[l].clock, 10, width),
                     view(pending[l].a, 10, width, dimension).as_imm(), view(pending[l].q, 1, 10, width).as_imm(),
                     view(pending[l].n, 1, 10, width).as_imm(), Int64(dimension), Float32(py=packet["rate"]),
                     Float32(py=config["direction_mix"][0]), Float32(py=config["direction_mix"][1]),
+                    Int64(1 if String(config["integration"]) == "explicit" else 0),
                     grid_dim=(width, 1, 10), block_dim=256)
     download[.float32](energy, packet["energies"])
     download[.float32](events, packet["events"])

@@ -36,11 +36,13 @@ class Config:
     direction_history: float=.125
     history_decay: float=.99
     observation_balance: str='image'
+    integration: str='semi_implicit'
 
     def __post_init__(self):
         for name in ('channels','winners','kernels','pool_after'):
             object.__setattr__(self,name,tuple(getattr(self,name)))
-        if (self.columns!=10 or not 1<=len(self.channels)<=4
+        if (self.integration not in ('semi_implicit','explicit')
+                or self.columns!=10 or not 1<=len(self.channels)<=4
                 or not len(self.channels)==len(self.winners)==len(self.kernels)==len(self.pool_after)
                 or any(type(w) is not int or type(k) is not int or not 1<=k<=w<=256 for w,k in zip(self.channels,self.winners))
                 or any(type(k) is not int or k<1 or k%2!=1 for k in self.kernels)
@@ -162,6 +164,9 @@ def backend():
 
 
 def _native(state,images,c,labels=None,trace=False,reverse=False,masks=None,evaluation_batch=None,splits=None):
+    if c.integration == "explicit":
+        from . import competitive_conv_connected_sparse as sparse
+        return sparse._native(state, images, c, labels, trace, reverse, masks, evaluation_batch, splits)
     x=np.ascontiguousarray(images,np.float32)
     if x.ndim!=4 or not len(x) or x.shape[1]!=x.shape[2] or not np.isfinite(x).all():raise ValueError('invalid images')
     sides=geometry(c,x.shape[1])

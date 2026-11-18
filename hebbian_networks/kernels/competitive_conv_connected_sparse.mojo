@@ -16,7 +16,7 @@ from competitive_conv_columns_ops import column_scores, observations, utilizatio
 from competitive_conv_columns_margin_ops import choose_margin_columns
 from competitive_conv_columns_batch_lion_ops import compact_pairs
 from competitive_conv_columns_batch_lion_image_ops import batch_observations, batch_coactivity
-from competitive_conv_columns_batch_lion_history_ops import apply_batch_lion
+from competitive_conv_connected_lion_ablation_ops import apply_batch_lion
 from competitive_conv_connected_sparse_ops import compact_selected_observations, sparse_coactivity
 
 
@@ -198,7 +198,8 @@ def run(packet: PythonObject) raises -> PythonObject:
                     Int64(layers[i].incoming),Int64(layers[i].width),Int64(py=packet["splits"][i]),
                     Float32(py=c["rate"]),Int64(1 if trace else 0),Float32(py=c["direction_history"]),
                     Float32(1.0-Float64(py=c["direction_history"])),Float32(py=c["history_decay"]),
-                    Float32(1.0-Float64(py=c["history_decay"])),grid_dim=ceildiv(10*layers[i].incoming*layers[i].width,128),block_dim=128)
+                    Float32(1.0-Float64(py=c["history_decay"])),
+                    Int64(1 if String(c["integration"]) == "explicit" else 0),grid_dim=ceildiv(10*layers[i].incoming*layers[i].width,128),block_dim=128)
                 if trace:
                     download(layers[i].numerator,packet["pooled_statistics"][i]["numerator"])
                     download(layers[i].controls,packet["pooled_statistics"][i]["nq"])

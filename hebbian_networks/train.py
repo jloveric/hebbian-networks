@@ -1,7 +1,6 @@
-"""Train a fixed paper recipe from scratch, resume, and test the final model.
+"""Train a dropout-free paper recipe, resume, and test the final model.
 
 Training mathematics, RNG streams and epoch boundaries match the source runs.
-Development selection is recorded in results/ and is not rerun by this command.
 """
 import argparse
 from dataclasses import asdict, replace
@@ -20,6 +19,9 @@ from . import competitive_conv_connected_sparse as cifar
 from .metrics import mnist_metrics, cifar_metrics
 
 MEASURE = (0, 1, 5, 10, 20, 40, 60, 80, 100)
+INTEGRATIONS = ("semi_implicit", "explicit")
+# Original CIFAR-10 identity hashes the full training source, indices, mean and sample.
+CIFAR_FULL_DATA_IDENTITY = "e6714d4bede633bad52b3f61f724c31ff2390df029ca8860afd8144e47ebb0cb"
 STOP = False
 
 
@@ -35,11 +37,16 @@ def timestep(initial, completed, dataset="cifar10"):
     return initial * .5 * (1 + math.cos(math.pi * (completed - 20) / 80))
 
 
-def recipe(dataset):
+def recipe(dataset, integration=None):
     directory = common.REPO / "configs"
     if not directory.exists():  # Packaged wheel rather than an editable checkout.
         directory = Path(__file__).parent / "configs"
-    return json.loads((directory / (dataset + ".json")).read_text())
+    settings = json.loads((directory / (dataset + ".json")).read_text())
+    if integration is not None:
+        if integration not in INTEGRATIONS:
+            raise ValueError(f"Unknown Lion update: {integration}")
+        settings["config"]["integration"] = integration
+    return settings
 
 
 def model_for(dataset):
@@ -74,8 +81,11 @@ def evaluate_final(dataset, checkpoint, data_directory, output=None):
             or not progress["fresh_weights"]):
         raise ValueError("Official testing requires a complete, freshly trained epoch-100 model")
     provenance = progress["provenance"]
-    # Support the standalone format and the two original paper checkpoint formats.
     trained_images = provenance.get("training_images", provenance.get("images"))
+    if (trained_images is None and dataset == "cifar10"
+            and provenance.get("version") in ("paper-ablations-1", "paper-additional-seeds-1")
+            and provenance.get("data_identity") == CIFAR_FULL_DATA_IDENTITY):
+        trained_images = expected_images
     if trained_images != expected_images or progress["measurements"][-1]["training"]["images"] != expected_images:
         raise ValueError("Checkpoint was not trained on the complete official training set")
     before = state_hash(dataset, state)
@@ -92,7 +102,8 @@ def evaluate_final(dataset, checkpoint, data_directory, output=None):
     measured = metrics(state, ds["images"], ds["labels"], config)
     if state_hash(dataset, state) != before or common.digest(checkpoint) != checksum:
         raise RuntimeError("Evaluation changed the checkpoint or persistent state")
-    result = dict(dataset=dataset, seed=progress["seed"], epoch=100, metrics=measured,
+    result = dict(dataset=dataset, seed=progress["seed"], integration=config.integration,
+                  epoch=100, metrics=measured,
                   checkpoint_sha256=checksum, state_sha256=before, test_sources=ds["sources"],
                   seconds=time.perf_counter()-started, evaluation_preserved_state=True,
                   official_test_used_for_selection=False, prior_validation_and_test_reuse=True)
@@ -101,8 +112,8 @@ def evaluate_final(dataset, checkpoint, data_directory, output=None):
     return result
 
 
-def train(dataset, output, data_directory, seed=None):
-    settings = recipe(dataset)
+def train(dataset, output, data_directory, seed=None, *, integration=None):
+    settings = recipe(dataset, integration)
     seed = settings["seed"] if seed is None else seed
     if not 0 <= seed <= 0xFFFFFFFF:
         raise ValueError("Seed must fit an unsigned 32-bit integer")
@@ -184,9 +195,12 @@ def _train(dataset, output, data_directory, seed, settings):
                 progress["included_images"] += events["included"]
                 progress["online_mistakes"] += events["mistakes"]
             else:
-                masks = model.mask_plan(config, seed, epoch, len(order))
+                masks = None
+                if config.dropout_probability:
+                    plan = model.mask_plan(config, seed, epoch, len(order))
+                    masks = [None] + [mask[order] for mask in plan[1:]]
                 packet = model.train(state, ds["images"][order], ds["labels"][order],
-                    replace(config, rate=rate), masks=[None] + [a[order] for a in masks[1:]])
+                    replace(config, rate=rate), masks=masks)
                 progress["included_images"] += int(np.any(packet["scales"] != 0, axis=1).sum())
         except FloatingPointError as error:
             # Keep the preceding valid resume; a partially changed failed epoch
@@ -220,10 +234,11 @@ def main():
     parser.add_argument("dataset", choices=("mnist", "cifar10"))
     parser.add_argument("--data-dir", type=Path, help="Official dataset cache directory")
     parser.add_argument("--output", type=Path, help="Training output directory")
-    parser.add_argument("--seed", type=int, help="Default: the validation-selected paper seed")
+    parser.add_argument("--seed", type=int, help="Defaults to the original seed in the four-seed comparison")
+    parser.add_argument("--integration", choices=INTEGRATIONS, help="Lion update (default: semi_implicit)")
     parser.add_argument("--dry-run", action="store_true", help="Print the fixed recipe; no data, build or GPU access")
     args = parser.parse_args()
-    settings = recipe(args.dataset)
+    settings = recipe(args.dataset, args.integration)
     if args.dry_run:
         if args.seed is not None:
             settings["seed"] = args.seed
@@ -232,8 +247,10 @@ def main():
     signal.signal(signal.SIGINT, stop)
     signal.signal(signal.SIGTERM, stop)
     seed = settings["seed"] if args.seed is None else args.seed
-    train(args.dataset, args.output or common.REPO / "runs" / args.dataset / f"seed{seed}",
-          args.data_dir or common.REPO / "data" / args.dataset, seed)
+    integration = settings["config"]["integration"]
+    default_output = common.REPO / "runs" / args.dataset / integration / f"seed{seed}"
+    train(args.dataset, args.output or default_output,
+          args.data_dir or common.REPO / "data" / args.dataset, seed, integration=integration)
 
 
 if __name__ == "__main__":

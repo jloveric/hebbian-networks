@@ -101,14 +101,14 @@ def read_pair(raw_source, *, test=False):
 def load_training(raw_source):
     images, labels, sources = read_pair(raw_source)
     mean = images.mean(0, dtype=np.float64).astype(np.float32)
-    return dict(images=base.preprocess(images, mean), labels=labels, mean=mean, sources=sources)
+    return dict(images=preprocess(images, mean), labels=labels, mean=mean, sources=sources)
 
 
 def load_test(raw_source, mean):
     if mean.shape != (784,) or mean.dtype != np.float32 or not np.isfinite(mean).all():
         raise ValueError("Test requires the saved full-training mean")
     images, labels, sources = read_pair(raw_source, test=True)
-    return dict(images=base.preprocess(images, mean), labels=labels, sources=sources)
+    return dict(images=preprocess(images, mean), labels=labels, sources=sources)
 
 
 def decode_test_batch(raw):

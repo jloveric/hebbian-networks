@@ -87,9 +87,13 @@ def reference_update(state, records, labels, c, reverse=False, scales=None):
         a = numerator / divisor[:, None, :]
         q = squares / divisor
         signal = c.direction_history * bank["m"].astype(np.float64) + (1 - c.direction_history) * a
-        w = (bank["w"].astype(np.float64) + c.rate * np.sign(signal) / np.sqrt(incoming)) / (
-            1 + c.rate * q[:, None, :]
-        )
+        old_w = bank["w"].astype(np.float64)
+        step = c.rate * np.sign(signal) / np.sqrt(incoming)
+        damping = c.rate * q[:, None, :]
+        if c.integration == "explicit":
+            w = old_w + step - damping * old_w
+        else:
+            w = (old_w + step) / (1 + damping)
         m = c.history_decay * bank["m"].astype(np.float64) + (1 - c.history_decay) * a
         pending.append((active, w, m, numerator, counts, squares))
     for i in reversed(range(len(state))) if reverse else range(len(state)):
