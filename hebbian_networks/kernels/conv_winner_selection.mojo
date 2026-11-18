@@ -3,7 +3,7 @@ from std.math import abs, max, min
 from std.memory import bitcast
 from max.gpu import block_idx, thread_idx, WARP_SIZE
 from max.gpu.primitives import warp
-from competitive_gru import F,R
+from gpu_buffer_utils import F,R
 
 
 def select_warp[combine_orientations: Bool](activity: F, mirror: R, orientation: F,

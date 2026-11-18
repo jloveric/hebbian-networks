@@ -1,7 +1,7 @@
 """One pooled local Lion step with explicit momentum conventions."""
 from std.math import sqrt, fma, isfinite
 from max.gpu import global_idx
-from competitive_gru import F, R, J
+from gpu_buffer_utils import F, R, J
 
 
 def apply_batch_lion_for_columns[columns: Int = 10](weights: F, history: F, clocks: J, partials: R, controls: R,

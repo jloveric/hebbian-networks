@@ -2,7 +2,7 @@
 
 from std.math import abs
 from max.gpu import global_idx
-from competitive_gru import F, R
+from gpu_buffer_utils import F, R
 
 
 @inline(.always)

@@ -1,6 +1,6 @@
 """The declared normalized margin controls eligibility; unit pair weights are unchanged."""
 from max.gpu import global_idx
-from competitive_gru import F,R,I
+from gpu_buffer_utils import F,R,I
 
 
 def choose_margin_columns_for_columns[columns: Int = 10](energy: R, labels: I, weights: R, scales: F,

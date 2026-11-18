@@ -96,19 +96,22 @@ included in the final score change. No weights are fitted or updated.
 
 ## Implementation and verification
 
-- `hebbian_networks/mnist_connected_groups.py`: mixed fully connected network,
+- `hebbian_networks/mnist_connected_groups.py` implements the mixed fully connected network,
   checkpoint format, independent NumPy reference, and Mojo interface.
-- `hebbian_networks/competitive_conv_connected_groups.py`: mixed convolutional
-  model, independent reference, and original dense GPU implementation.
-- `hebbian_networks/competitive_conv_connected_sparse.py`: the sparse accumulation
-  backend used for both CIFAR-10 updates in the paper.
-- `hebbian_networks/kernels/`: the original Mojo training kernels and their
-  dependencies, including the GPU view and buffer helpers in `competitive_gru.mojo`.
+- `hebbian_networks/competitive_conv_connected_groups.py` defines the CIFAR-10
+  configuration, checkpoint format, and NumPy reference.
+- `hebbian_networks/competitive_conv_connected_sparse.py` implements the sparse
+  GPU backend used for both CIFAR-10 updates in the paper.
+- `hebbian_networks/kernels/` contains the two paper GPU entry points and their
+  dependencies. CIFAR-10 helpers include `conv_reflected_projection.mojo`,
+  `conv_winner_selection.mojo`, and `conv_batch_coactivity.mojo`.
+  `gpu_buffer_utils.mojo` provides CIFAR-10 buffer and view helpers.
+  `mnist_gpu_ops.mojo` provides MNIST projection, competition, and routing.
 - `common.py`, `data.py`, `mnist_reference.py`, `conv_reference.py`, `metrics.py`:
   the shared helpers extracted from the original experiment modules.
 - `train.py`, `evaluate.py`, `scoring.py`: focused standalone entry points.
-- [provenance/source-manifest.json](provenance/source-manifest.json): original
-  source hashes and the scope of import/path/orchestration adaptations.
+- The source manifest records original source hashes and the kernel filename
+  mapping. [Source manifest](provenance/source-manifest.json)
 
 ```bash
 uv run pytest
@@ -118,8 +121,8 @@ uv run --extra gpu python -m hebbian_networks.verify --gpu
 The first command checks numerical behavior and serialization on small synthetic
 inputs. The second compiles the copied kernels and checks both dropout-free Lion
 updates, forward activities, inference immutability, and checkpoint round trips
-against independent NumPy calculations. It also checks compatibility with the
-earlier dropout configurations.
+against independent NumPy calculations. GPU training requires zero dropout.
+Evaluation also accepts checkpoints from the earlier dropout runs.
 
 The repository ships code and recorded results. The data files are downloaded
 on demand and checkpoints are written by the training command. Source

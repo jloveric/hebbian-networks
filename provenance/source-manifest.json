@@ -1,4 +1,45 @@
 {
+  "paper_kernel_cleanup": {
+    "entry_points": {
+      "mnist": "mnist_connected_groups.mojo",
+      "cifar10": "competitive_conv_connected_sparse.mojo"
+    },
+    "active_sources": {
+      "mnist": [
+        "mnist_connected_groups.mojo",
+        "mnist_gpu_ops.mojo"
+      ],
+      "cifar10": [
+        "competitive_conv_connected_lion_ablation_ops.mojo",
+        "competitive_conv_connected_sparse.mojo",
+        "competitive_conv_connected_sparse_ops.mojo",
+        "conv_activity_stats.mojo",
+        "conv_antialias_pool.mojo",
+        "conv_batch_coactivity.mojo",
+        "conv_bias_patches.mojo",
+        "conv_margin_routing.mojo",
+        "conv_pair_compaction.mojo",
+        "conv_reflected_projection.mojo",
+        "conv_winner_selection.mojo",
+        "gpu_buffer_utils.mojo"
+      ]
+    },
+    "removed_modules": [
+      "competitive_conv_columns_batch_lion_history_ops.mojo",
+      "competitive_conv_connected_groups.mojo",
+      "mnist_columns_pooled_ops.mojo",
+      "mnist_columns_wide_select.mojo"
+    ],
+    "trimmed_modules": [
+      "competitive_conv_columns_batch_lion_ops.mojo",
+      "competitive_conv_columns_bias_ops.mojo",
+      "competitive_conv_columns_ops.mojo",
+      "competitive_conv_columns_performance_ops.mojo",
+      "competitive_conv_connected_sparse.mojo",
+      "mnist_columns_gpu.mojo",
+      "mnist_connected_groups.mojo"
+    ]
+  },
   "paired_paper_update": {
     "source_commit": "1d555050b775f9a69e38735fbb37ca8d96d61526",
     "original_sha256": {
@@ -110,5 +151,17 @@
       ],
       "source_sections_verbatim": true
     }
+  },
+  "kernel_module_renames": {
+    "competitive_conv_columns_antialias_ops.mojo": "conv_antialias_pool.mojo",
+    "competitive_conv_columns_batch_lion_image_ops.mojo": "conv_batch_coactivity.mojo",
+    "competitive_conv_columns_batch_lion_ops.mojo": "conv_pair_compaction.mojo",
+    "competitive_conv_columns_bias_ops.mojo": "conv_bias_patches.mojo",
+    "competitive_conv_columns_margin_ops.mojo": "conv_margin_routing.mojo",
+    "competitive_conv_columns_ops.mojo": "conv_activity_stats.mojo",
+    "competitive_conv_columns_performance_ops.mojo": "conv_reflected_projection.mojo",
+    "competitive_conv_columns_warp_selection.mojo": "conv_winner_selection.mojo",
+    "competitive_gru.mojo": "gpu_buffer_utils.mojo",
+    "mnist_columns_gpu.mojo": "mnist_gpu_ops.mojo"
   }
 }

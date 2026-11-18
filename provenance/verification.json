@@ -1,4 +1,67 @@
 {
+  "kernel_module_renames": {
+    "status": "passed",
+    "date": "2026-11-18",
+    "pytest_passed": 13,
+    "mojo": {
+      "fresh_build": true,
+      "source_files_in_wheel": 14,
+      "gpu_training_cases": 4,
+      "gpu_inference_cases": 6
+    },
+    "first_training_minibatches_bitwise_equal_to_original_binaries": 4
+  },
+  "paper_kernel_cleanup": {
+    "status": "passed",
+    "date": "2026-11-17",
+    "pytest_passed": 13,
+    "mojo": {
+      "fresh_build": true,
+      "source_files_in_wheel": 14,
+      "gpu_training_cases": 4,
+      "gpu_inference_cases": 6
+    },
+    "first_training_minibatches_bitwise_equal_to_original_binaries": 4,
+    "checkpoint_test_error_counts": [
+      {
+        "dataset": "mnist",
+        "setting": "semi_implicit",
+        "seed": 10102,
+        "errors": 190
+      },
+      {
+        "dataset": "mnist",
+        "setting": "explicit",
+        "seed": 10102,
+        "errors": 178
+      },
+      {
+        "dataset": "cifar10",
+        "setting": "semi_implicit",
+        "seed": 10101,
+        "errors": 1892
+      },
+      {
+        "dataset": "cifar10",
+        "setting": "explicit",
+        "seed": 10101,
+        "errors": 1933
+      },
+      {
+        "dataset": "mnist",
+        "setting": "historical_dropout",
+        "seed": 10102,
+        "errors": 166
+      },
+      {
+        "dataset": "cifar10",
+        "setting": "historical_dropout",
+        "seed": 10101,
+        "errors": 1950
+      }
+    ],
+    "full_dataset_training_launched": false
+  },
   "paired_paper_update": {
     "status": "passed",
     "date": "2026-11-17",

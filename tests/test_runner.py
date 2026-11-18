@@ -19,12 +19,12 @@ def test_interrupted_resume_matches_uninterrupted_training(tmp_path, monkeypatch
                     initial_rate=.00075, schedule="constant20_cosine80")
     control = dict(interrupt=False)
 
-    def run(state, x, c, y, rate, *, image_ids, seed, epoch):
-        changed = model.reference_train(state, x, y, c, rate, image_ids=image_ids, seed=seed, epoch=epoch)
+    def run(state, x, c, y, rate):
+        changed = model.reference_train(state, x, y, c, rate)
         for actual, new in zip(state, changed):
             for key in actual:
                 actual[key][...] = new[key]
-        if control["interrupt"] and epoch == 1:
+        if control["interrupt"]:
             runner.STOP = True
         return None, dict(included=0, mistakes=0)
 

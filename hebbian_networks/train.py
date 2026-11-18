@@ -191,16 +191,12 @@ def _train(dataset, output, data_directory, seed, settings):
         try:
             if dataset == "mnist":
                 _, events = model.run(state, ds["images"][order], config, ds["labels"][order],
-                    rate=rate, image_ids=order, seed=seed, epoch=epoch)
+                    rate=rate)
                 progress["included_images"] += events["included"]
                 progress["online_mistakes"] += events["mistakes"]
             else:
-                masks = None
-                if config.dropout_probability:
-                    plan = model.mask_plan(config, seed, epoch, len(order))
-                    masks = [None] + [mask[order] for mask in plan[1:]]
                 packet = model.train(state, ds["images"][order], ds["labels"][order],
-                    replace(config, rate=rate), masks=masks)
+                    replace(config, rate=rate))
                 progress["included_images"] += int(np.any(packet["scales"] != 0, axis=1).sum())
         except FloatingPointError as error:
             # Keep the preceding valid resume; a partially changed failed epoch

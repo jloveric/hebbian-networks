@@ -1,8 +1,8 @@
 """Accumulate only nonzero selected observations in their original order."""
 from std.math import ceildiv, fma
 from max.gpu import block_idx, thread_idx
-from competitive_gru import F, R, I, J
-from competitive_conv_columns_bias_ops import reflect_coordinate
+from gpu_buffer_utils import F, R, I, J
+from conv_bias_patches import reflect_coordinate
 
 
 def compact_selected_observations(posts: R, orientations: R, nq: R, scales: R,

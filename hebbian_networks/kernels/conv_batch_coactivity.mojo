@@ -1,44 +1,26 @@
 """Direct minibatch coactivity and one local Lion update per active neuron."""
-from std.math import abs, ceildiv, fma, isfinite, sqrt
-from max.gpu import block_idx, global_idx, thread_idx, WARP_SIZE
+from std.math import ceildiv, fma
+from max.gpu import block_idx, thread_idx, WARP_SIZE
 from max.gpu.primitives import warp
 from max.gpu.sync import barrier
 from layout import row_major, stack_allocation
-from competitive_gru import F, R, I, J
-from competitive_conv_columns_bias_ops import reflect_coordinate
+from gpu_buffer_utils import F, R, I
+from conv_bias_patches import reflect_coordinate
 
 
-def compact_pairs_for_columns[columns: Int = 10](scales: R, pairs: J, counts: J, batch_arg: Int64, start_arg: Int64):
+def batch_observations_for_columns[columns: Int = 10](nq: R, scales: R, controls: F, width_arg: Int64,
+                       batch_arg: Int64, start_arg: Int64, image_balance_arg: Int64):
     comptime MAX_THREADS_PER_BLOCK_METADATA = 128
-    var column, lane = block_idx.x, thread_idx.x
-    var batch = Int(batch_arg)
-    var scan = stack_allocation[.int32, address_space=.SHARED](row_major[128]())
-    var included = lane < batch and scales[(Int(start_arg)+lane)*columns+column] != 0
-    scan[lane] = 1 if included else 0
-    barrier()
-    comptime for shift in range(7):
-        var offset = 1 << shift
-        var previous = Int32(0)
-        if lane >= offset:
-            previous = scan[lane-offset]
-        barrier()
-        scan[lane] += previous
-        barrier()
-    if included:
-        pairs[column*batch+Int(scan[lane])-1] = Int64(lane)
-    if lane == 127:
-        counts[column] = Int64(scan[lane])
-
-
-def batch_observations(nq: R, scales: R, controls: F, width_arg: Int64,
-                       batch_arg: Int64, start_arg: Int64):
-    comptime MAX_THREADS_PER_BLOCK_METADATA = 128
+    var image_balance = image_balance_arg != 0
     var j, column, image = block_idx.x, block_idx.y, thread_idx.x
     var width, batch = Int(width_arg), Int(batch_arg)
     var n, q = Float32(0),Float32(0)
-    if image < batch and scales[(Int(start_arg)+image)*10+column] != 0:
+    if image < batch and scales[(Int(start_arg)+image)*columns+column] != 0:
         var at = 2*((column*batch+image)*width+j)
         n,q = nq[at],nq[at+1]
+        if image_balance and n > 0:
+            q /= n
+            n = 1
     n,q = warp.sum(n),warp.sum(q)
     var sums = stack_allocation[.float32, address_space=.SHARED](row_major[2,4]())
     if image%WARP_SIZE == 0:
@@ -53,11 +35,12 @@ def batch_observations(nq: R, scales: R, controls: F, width_arg: Int64,
             controls[at],controls[at+1] = n,q
 
 
-def batch_coactivity[shared_input: Bool](inputs: R, posts: R, orientations: R,
+def batch_coactivity[shared_input: Bool, columns: Int = 10](inputs: R, posts: R, orientations: R, observation_stats: R,
         scales: R, pairs: I, pair_counts: I, partials: F,
         incoming_arg: Int64, width_arg: Int64, locations_arg: Int64,
-        batch_arg: Int64, start_arg: Int64, kernel_arg: Int64, splits_arg: Int64):
+        batch_arg: Int64, start_arg: Int64, kernel_arg: Int64, splits_arg: Int64, image_balance_arg: Int64):
     comptime MAX_THREADS_PER_BLOCK_METADATA = 256
+    var image_balance = image_balance_arg != 0
     var incoming,width,locations = Int(incoming_arg),Int(width_arg),Int(locations_arg)
     var batch,kernel,splits = Int(batch_arg),Int(kernel_arg),Int(splits_arg)
     var column,part = divmod(block_idx.z,splits)
@@ -87,7 +70,10 @@ def batch_coactivity[shared_input: Bool](inputs: R, posts: R, orientations: R,
                 var pair,location = divmod(start+y,locations)
                 var image = Int(pairs[column*batch+pair])
                 var at = ((column*batch+image)*locations+location)*width+j
-                var g = posts[at]*scales[(Int(start_arg)+image)*10+column]
+                var g = posts[at]*scales[(Int(start_arg)+image)*columns+column]
+                if image_balance:
+                    var n = observation_stats[2*((column*batch+image)*width+j)]
+                    g /= n if n > 0 else 1
                 if orientations[at] != 0:
                     g1 = g
                 else:
@@ -108,38 +94,7 @@ def batch_coactivity[shared_input: Bool](inputs: R, posts: R, orientations: R,
                 partials[((column*splits+part)*incoming+i)*width+j] = total[r*2+c]
 
 
-def apply_batch_lion(weights: F, history: F, clocks: J, partials: R, controls: R,
-        numerator: F, health: F, incoming_arg: Int64, width_arg: Int64,
-        splits_arg: Int64, rate: Float32, trace_arg: Int64):
-    comptime MAX_THREADS_PER_BLOCK_METADATA = 128
-    var at = global_idx.x
-    var incoming,width,splits = Int(incoming_arg),Int(width_arg),Int(splits_arg)
-    if at >= 10*incoming*width:
-        return
-    var column,coordinate = divmod(at,incoming*width)
-    var j = coordinate%width
-    var n = controls[2*(column*width+j)]
-    if n == 0:
-        if trace_arg != 0:
-            numerator[at] = 0
-        return
-    var total = Float32(0)
-    for part in range(splits):
-        total += partials[(column*splits+part)*incoming*width+coordinate]
-    if trace_arg != 0:
-        numerator[at] = total
-    var a,q = total/n,controls[2*(column*width+j)+1]/n
-    var old_m = history[at]
-    var signal = fma(Float32(.875),a,Float32(.125)*old_m)
-    var direction = Float32(1 if signal > 0 else -1 if signal < 0 else 0)/sqrt(Float32(incoming))
-    var weight = (weights[at]+rate*direction)/(1+rate*q)
-    var next_m = fma(Float32(.01),a,Float32(.99)*old_m)
-    weights[at],history[at] = weight,next_m
-    if coordinate < width:
-        clocks[column*width+j] += 1
-    if not isfinite(weight) or not isfinite(next_m) or not isfinite(q):
-        health[0] = 0
 
 
 # Keep the original non-parametric kernel entry point for ten-class readers.
-comptime compact_pairs = compact_pairs_for_columns[10]
+comptime batch_observations = batch_observations_for_columns[10]

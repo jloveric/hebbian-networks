@@ -26,6 +26,20 @@ def test_cifar_reference_and_roundtrip(integration, dropout):
     check_cifar(integration=integration, dropout=dropout)
 
 
+def test_packaged_kernels_belong_to_the_paper_backends():
+    dependencies = {path for path in mnist.source_paths() + cifar.source_paths()
+                    if path.suffix == ".mojo"}
+    assert dependencies == set(common.KERNELS.glob("*.mojo"))
+
+
+def test_paper_gpu_training_requires_zero_dropout():
+    with pytest.raises(ValueError, match="dropout=0"):
+        mnist.run([], np.zeros((1, 784), np.float32), mnist.Config(dropout=.3), np.array([0]))
+    with pytest.raises(ValueError, match="dropout_probability=0"):
+        cifar.train([], np.zeros((1, 32, 32, 3), np.float32), np.array([0]),
+                    cifar.Config(dropout_probability=.2))
+
+
 def test_counter_dropout_preserves_example_identity_across_chunks():
     ids = np.array([18, 3, 71, 4, 92], dtype=np.int64)
     whole = common.dropout_mask(ids, 100, 10102, 42, 1, .3)

@@ -1,24 +1,15 @@
 """One connected convolutional network with class-owned receiving filters."""
-import hashlib
-import importlib
 import json
-import os
-import re
-import subprocess
-import sys
 from dataclasses import asdict, dataclass
-from functools import lru_cache
 from pathlib import Path
 
 import numpy as np
-from . import data, common, conv_reference
+from . import data
 from .common import fingerprint
 from .conv_reference import pool
 from .conv_reference import reference_update as explicit_update
 
 REPO=Path(__file__).resolve().parents[1]
-ROOT=common.BUILD/'cifar_reference'
-SOURCE=common.KERNELS/'competitive_conv_connected_groups.mojo'
 VERSION='competitive-conv-connected-class-groups-1'
 
 
@@ -155,62 +146,23 @@ def reference_train(state,images,labels,c,reverse=False,masks=None):
 
 
 def source_paths():
-    return common.source_paths(SOURCE, [Path(__file__), Path(common.__file__), Path(data.__file__), Path(conv_reference.__file__)])
+    from . import competitive_conv_connected_sparse as sparse
+    return sparse.source_paths()
 
 
-@lru_cache(None)
 def backend():
-    return common.backend("competitive_conv_connected_native", SOURCE, source_paths())
+    from . import competitive_conv_connected_sparse as sparse
+    return sparse.backend()
 
 
-def _native(state,images,c,labels=None,trace=False,reverse=False,masks=None,evaluation_batch=None,splits=None):
-    if c.integration == "explicit":
-        from . import competitive_conv_connected_sparse as sparse
-        return sparse._native(state, images, c, labels, trace, reverse, masks, evaluation_batch, splits)
-    x=np.ascontiguousarray(images,np.float32)
-    if x.ndim!=4 or not len(x) or x.shape[1]!=x.shape[2] or not np.isfinite(x).all():raise ValueError('invalid images')
-    sides=geometry(c,x.shape[1])
-    if len(state)!=len(c.channels) or (trace and len(x)>c.batch):raise ValueError('invalid state or trace size')
-    cin=x.shape[-1]
-    for bank,width,kernel in zip(state,c.channels,c.kernels):
-        shape=(10,kernel*kernel*cin+1,width)
-        if any(bank[key].shape!=shape or bank[key].dtype!=np.float32 or not bank[key].flags.c_contiguous or not np.isfinite(bank[key]).all() for key in ('w','m')):
-            raise ValueError('invalid connected weight/history geometry')
-        if bank['clock'].shape!=(10,width) or bank['clock'].dtype!=np.int64 or (bank['clock']<0).any():raise ValueError('invalid clocks')
-        cin=10*width
-    y=np.zeros(len(x),np.int64) if labels is None else np.ascontiguousarray(labels,np.int64)
-    if y.shape!=(len(x),) or ((y<0)|(y>=10)).any():raise ValueError('invalid labels')
-    if evaluation_batch is not None and (labels is not None or not 1<=evaluation_batch<=128):raise ValueError('evaluation batch is inference only')
-    if labels is not None and c.dropout_probability:
-        if masks is None or len(masks)!=len(state):raise ValueError('explicit deterministic masks required')
-        for i in range(1,len(state)):
-            a=masks[i]
-            if a.shape!=(len(x),10*c.channels[i-1]) or not np.isfinite(a).all():raise ValueError('invalid shared feature masks')
-    splits=[16 if i==0 else 4 if s*s>=16 else 1 for i,s in enumerate(sides)] if splits is None else list(splits)
-    if len(splits)!=len(state) or any(type(s) is not int or s<1 for s in splits):raise ValueError('invalid accumulation splits')
-    packet=dict(state=state,images=x,labels=y,train=labels is not None,trace=trace,reverse=reverse,
-        config=asdict(c),splits=splits,evaluation_batch=c.batch if evaluation_batch is None else evaluation_batch,
-        energies=np.zeros((len(x),10,len(state)),np.float32),health=np.ones(1,np.float32),
-        utilization=[np.zeros((10,w),np.float32) for w in c.channels],
-        positive_utilization=[np.zeros((10,w),np.float32) for w in c.channels],
-        scales=np.zeros((len(x),10),np.float32),score_weights=score_weights(c,x.shape[1]),
-        masks=[np.ones(1,np.float32) if i==0 or masks is None or labels is None else np.ascontiguousarray(masks[i],np.float32) for i in range(len(state))])
-    if trace:
-        packet['records']=[dict(u=np.zeros((1,len(x),s,s,b['w'].shape[1]),np.float32),
-              h=np.zeros((10,len(x),s,s,w),np.float32),orientation=np.zeros((10,len(x),s,s,w),np.float32))
-              for b,s,w in zip(state,sides,c.channels)]
-        if labels is not None:packet['pooled_statistics']=[dict(numerator=np.zeros_like(b['w']),nq=np.zeros((10,w,2),np.float32)) for b,w in zip(state,c.channels)]
-    native,_=backend();native.run(packet)
-    if packet['health'][0]!=1 or not np.isfinite(packet['energies']).all():raise FloatingPointError('nonfinite connected convolution state/activity')
-    return packet
+def score(state, images, c=Config(), trace=False, evaluation_batch=None):
+    from . import competitive_conv_connected_sparse as sparse
+    return sparse.score(state, images, c, trace=trace, evaluation_batch=evaluation_batch)
 
 
-def score(state,images,c=Config(),trace=False,evaluation_batch=None):
-    return _native(state,images,c,trace=trace,evaluation_batch=evaluation_batch)
-
-
-def train(state,images,labels,c=Config(),trace=False,reverse=False,masks=None,splits=None):
-    return _native(state,images,c,labels,trace,reverse,masks,splits=splits)
+def train(state, images, labels, c=Config(), trace=False, reverse=False, masks=None, splits=None):
+    from . import competitive_conv_connected_sparse as sparse
+    return sparse.train(state, images, labels, c, trace=trace, reverse=reverse, masks=masks, splits=splits)
 
 
 def save_checkpoint(path,state,c,mean,progress):

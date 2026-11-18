@@ -7,24 +7,24 @@ from max.gpu import block_idx, thread_idx
 from max.gpu.host import DeviceContext, DeviceBuffer
 from layout import TileTensor, row_major
 from linalg.matmul.vendor.blas import matmul
-from competitive_gru import F, R, fv, rv, iv, jv, upload, download
-from competitive_conv_columns_bias_ops import bias_patches, reflect_bias_columns
-from competitive_conv_columns_performance_ops import projection_orientations
-from competitive_conv_columns_warp_selection import select_warp
-from competitive_conv_columns_antialias_ops import antialias_pool
-from competitive_conv_columns_ops import column_scores, observations, utilization
-from competitive_conv_columns_margin_ops import choose_margin_columns
-from competitive_conv_columns_batch_lion_ops import compact_pairs
-from competitive_conv_columns_batch_lion_image_ops import batch_observations, batch_coactivity
+from gpu_buffer_utils import F, R, fv, rv, iv, jv, upload, download
+from conv_bias_patches import bias_patches, reflect_bias_columns
+from conv_reflected_projection import projection_orientations
+from conv_winner_selection import select_warp
+from conv_antialias_pool import antialias_pool
+from conv_activity_stats import column_scores, observations, utilization
+from conv_margin_routing import choose_margin_columns
+from conv_pair_compaction import compact_pairs
+from conv_batch_coactivity import batch_observations, batch_coactivity
 from competitive_conv_connected_lion_ablation_ops import apply_batch_lion
 from competitive_conv_connected_sparse_ops import compact_selected_observations, sparse_coactivity
 
 
-def connected_patches(source: R, output: F, masks: R, input_side_arg: Int64,
+def connected_patches(source: R, output: F, input_side_arg: Int64,
         side_arg: Int64, previous_width_arg: Int64, kernel_arg: Int64,
-        batch_arg: Int64, start_arg: Int64, masked_arg: Int64):
+        batch_arg: Int64):
     comptime MAX_THREADS_PER_BLOCK_METADATA = 256
-    comptime assert source.flat_rank == output.flat_rank == masks.flat_rank == 1
+    comptime assert source.flat_rank == output.flat_rank == 1
     var row, lane = block_idx.x, thread_idx.x
     var side, input_side = Int(side_arg), Int(input_side_arg)
     var previous_width, kernel, batch = Int(previous_width_arg), Int(kernel_arg), Int(batch_arg)
@@ -39,8 +39,6 @@ def connected_patches(source: R, output: F, masks: R, input_side_arg: Int64,
             var dy, dx = divmod(spatial, kernel)
             var group, neuron = divmod(channel, previous_width)
             value = source[(((group*batch+image)*input_side+y+dy)*input_side+x+dx)*previous_width+neuron]
-            if masked_arg != 0:
-                value *= masks[(Int(start_arg)+image)*channels+channel]
         output[row*dimension+coordinate] = value
 
 
@@ -114,10 +112,8 @@ def run(packet: PythonObject) raises -> PythonObject:
     var health = ctx.enqueue_create_buffer[.float32](1)
     health.enqueue_fill(1)
     var layers = List[Layer]()
-    var masks = List[DeviceBuffer[.float32]]()
     var side = Int(py=packet["images"].shape[1])
     for i in range(depth):
-        masks.append(upload[.float32](ctx,packet["masks"][i]))
         layers.append(Layer(ctx,packet["state"][i],side,Int(py=c["kernels"][i]),batch,
             train,Int(py=packet["splits"][i]),trace))
         side = layers[i].side
@@ -140,9 +136,9 @@ def run(packet: PythonObject) raises -> PythonObject:
                     Int64(rows),Int64(width),Int64(di),grid_dim=(ceildiv(width,64),ceildiv(rows,64),10),block_dim=(16,16))
             else:
                 var source = rv(layers[i-1].pooled) if Bool(py=c["pool_after"][i-1]) else rv(layers[i-1].posts)
-                ctx.enqueue_function[connected_patches](source,fv(layers[i].inputs),rv(masks[i]),
+                ctx.enqueue_function[connected_patches](source,fv(layers[i].inputs),
                     Int64(layers[i].input_side),Int64(layers[i].side),Int64(layers[i-1].width),
-                    Int64(kernel),Int64(size),Int64(start),Int64(1 if train and Float32(py=c["dropout_probability"])>0 else 0),
+                    Int64(kernel),Int64(size),
                     grid_dim=rows,block_dim=256)
                 var lhs = TileTensor(layers[i].inputs.unsafe_ptr(),row_major((rows,di))).as_imm()
                 for group in range(10):

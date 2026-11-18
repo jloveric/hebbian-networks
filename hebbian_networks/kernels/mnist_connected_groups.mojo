@@ -8,7 +8,7 @@ from max.gpu import block_idx, thread_idx
 from max.gpu.sync import barrier
 from max.gpu.host import DeviceContext, DeviceBuffer
 from layout import TileTensor, row_major, stack_allocation
-from mnist_columns_gpu import F, R, I, J, Layer, view, clock_view, upload, download, project, select, route, keep_input
+from mnist_gpu_ops import F, R, J, Layer, view, clock_view, upload, download, project, select, route
 
 
 def prepare_connected[first: Bool](source: R, target: F, start_arg: Int64,
@@ -39,17 +39,6 @@ def prepare_connected[first: Bool](source: R, target: F, start_arg: Int64,
         var norm = sqrt(squares[0])
         for i in range(lane, dimension, 256):
             target[c, b, i] = target[c, b, i]/norm if norm > 0 else 0
-
-
-def drop_hidden(u: F, image_ids: I, start_arg: Int64, dimension_arg: Int64,
-                seed: UInt32, epoch: UInt32, layer: UInt32, probability: Float32):
-    comptime MAX_THREADS_PER_BLOCK_METADATA = 256
-    comptime assert u.flat_rank == 3 and image_ids.flat_rank == 1
-    var c, b, lane = block_idx.z, block_idx.x, thread_idx.x
-    var image_id = UInt32(image_ids[Int(start_arg)+b])
-    for i in range(lane, Int(dimension_arg)-1, 256):
-        var keep = keep_input(image_id, UInt32(i), seed, epoch, layer, probability)
-        u[c, b, i] = u[c, b, i]/(1-probability) if keep else 0
 
 
 def statistics(u: R, h: R, signs: R, a: F, q: F, n: F,
@@ -101,12 +90,6 @@ def commit_integration(w: F, m: F, clock: J, a: R, q: R, n: R,
         clock[0, c, j] += 1
 
 
-def commit(w: F, m: F, clock: J, a: R, q: R, n: R,
-           dimension_arg: Int64, rate: Float32, history_mix: Float32, current_mix: Float32):
-    """Preserve the original semi-implicit entry point for dependent kernels."""
-    commit_integration(w, m, clock, a, q, n, dimension_arg, rate, history_mix, current_mix, 0)
-
-
 def count_usage(h: R, usage: J, size_arg: Int64):
     comptime MAX_THREADS_PER_BLOCK_METADATA = 64
     comptime assert h.flat_rank == usage.flat_rank == 3
@@ -143,9 +126,6 @@ def run(packet: PythonObject) raises -> PythonObject:
     var train = Bool(py=packet["train"])
     var images = upload[.float32](ctx, packet["images"])
     var labels = upload[.int64](ctx, packet["labels"])
-    var image_ids = upload[.int64](ctx, packet["image_ids"])
-    var probability = Float32(py=config["dropout"])
-    var seed, epoch = UInt32(py=packet["seed"]), UInt32(py=packet["epoch"])
     var energy = ctx.enqueue_create_buffer[.float32](count*10*depth)
     var signs = ctx.enqueue_create_buffer[.float32](batch*10)
     var events = ctx.enqueue_create_buffer[.float32](count*2)
@@ -168,11 +148,6 @@ def run(packet: PythonObject) raises -> PythonObject:
                 ctx.enqueue_function[prepare_connected[False]](
                     view(layers[l-1].h, 10, size, layers[l-1].width).as_imm(), u,
                     Int64(0), Int64(dimension), Int64(layers[l-1].width), grid_dim=(size, 1, 10), block_dim=256)
-                if train and probability > 0:
-                    ctx.enqueue_function[drop_hidden](u,
-                        TileTensor(image_ids.unsafe_ptr().unsafe_origin_cast[MutUntrackedOrigin](), row_major((count,))).as_imm(),
-                        Int64(start), Int64(dimension), seed, epoch, UInt32(l), probability,
-                        grid_dim=(size, 1, 10), block_dim=256)
             ctx.enqueue_function[project](u.as_imm(), view(layers[l].w, 10, width, dimension).as_imm(),
                 h, Int64(size), Int64(width), Int64(dimension),
                 grid_dim=(ceildiv(width, 32), ceildiv(size, 32), 10), block_dim=(16, 16))

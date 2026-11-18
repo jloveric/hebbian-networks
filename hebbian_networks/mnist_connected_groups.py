@@ -145,6 +145,8 @@ def validate(state, x, c):
 
 def run(state, images, c, labels=None, rate=.00075, reverse=False, observations=None,
         *, image_ids=None, seed=10101, epoch=0):
+    if labels is not None and c.dropout:
+        raise ValueError("MNIST GPU training requires dropout=0")
     x = np.ascontiguousarray(images, np.float32)
     validate(state, x, c)
     if not np.isfinite(rate) or rate <= 0:
@@ -152,17 +154,18 @@ def run(state, images, c, labels=None, rate=.00075, reverse=False, observations=
     y = np.zeros(len(x), np.int64) if labels is None else np.ascontiguousarray(labels, np.int64)
     if y.shape != (len(x),) or ((y < 0) | (y >= 10)).any():
         raise ValueError("invalid labels")
-    ids = np.arange(len(x), dtype=np.int64) if image_ids is None else np.ascontiguousarray(image_ids, np.int64)
-    if (ids.shape != (len(x),) or ((ids < 0) | (ids > 0xFFFFFFFF)).any()
-            or not 0 <= seed <= 0xFFFFFFFF or not 0 <= epoch <= 0xFFFFFFFF):
+    if not 0 <= seed <= 0xFFFFFFFF or not 0 <= epoch <= 0xFFFFFFFF:
         raise ValueError("invalid deterministic mask counters")
+    if image_ids is not None:
+        ids = np.asarray(image_ids, dtype=np.int64)
+        if ids.shape != (len(x),) or ((ids < 0) | (ids > 0xFFFFFFFF)).any():
+            raise ValueError("invalid image IDs")
     if observations is not None and len(x) > c.batch:
         raise ValueError("capture requires a single minibatch")
     captured = [] if observations is None else [
         dict(u=np.zeros((10, len(x), b["w"].shape[-1]), np.float32),
              h=np.zeros((10, len(x), w), np.float32)) for b, w in zip(state, c.widths)]
     packet = dict(config=asdict(c), state=state, images=x, labels=y, train=labels is not None,
-                  image_ids=ids, seed=seed, epoch=epoch,
                   rate=rate, reverse=reverse, energies=np.zeros((len(x), 10, len(state)), np.float32),
                   events=np.zeros((len(x), 2), np.float32), observations=captured,
                   usage=[np.zeros((10, w), np.int64) for w in c.widths])
