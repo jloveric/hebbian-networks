@@ -1,7 +1,8 @@
-# Supervised Hebbian Class Networks
+# Supervised Hebbian Class Networks: Learning Without Backpropagation
 
-Standalone code for the jointly trained MNIST MLP and CIFAR-10 convolutional
-network reported in the TMLR draft. Every neuron or filter is assigned a class,
+This repository implements the jointly trained MNIST MLP and CIFAR-10
+convolutional network described in [arXiv:2611.24314](https://arxiv.org/abs/2611.24314).
+Every neuron or filter is assigned a class,
 and all layers learn together using incident activities and local persistent
 statistics. Predictions use fixed sums of layer activities. Training uses no
 derivatives, backpropagation, propagated error vectors, or fitted classifier.
